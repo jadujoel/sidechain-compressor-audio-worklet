@@ -1,5 +1,5 @@
 .Compressor {
-  background-image: radial-gradient(70% 50%, #555 6%, #333 90%);
+  background-image: radial-gradient(circle at 20% 50%, #555 6%, #333 90%);
   box-shadow: 10px 5px 5px black;
   border-radius: 14px;
 }
