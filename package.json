@@ -1,6 +1,6 @@
 {
   "name": "sidechain-compressor-audio-worklet",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A Sidechainable Compressor built on the WebAudio Audio Worklet API",
   "repository": {
     "type": "git",
