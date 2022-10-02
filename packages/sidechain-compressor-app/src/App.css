@@ -1,14 +1,19 @@
-html, body {
+html,
+body {
   height: 100vh;
 }
+
 body {
   margin: 0;
+
   /* background-image: radial-gradient(30% 50%, #555 6%, #333 90%); */
-  background-color: rgb(43, 43, 43);
+  background-color: rgb(43 43 43);
+
   /* display: grid;
   justify-content: center;
   align-items: center; */
 }
+
 .App {
   display: grid;
   justify-content: center;

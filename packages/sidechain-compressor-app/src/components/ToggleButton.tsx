@@ -1,14 +1,15 @@
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
-import './ToggleButton.css';
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
+import { useEffect, useState } from 'react'
+import { FunctionAny } from '../utils/types'
+import './ToggleButton.css'
 
-const CheckedIcon = () => <>🌜</>;
-const UncheckedIcon = () => <>🌞</>;
+const CheckedIcon = () => <>🌜</>
+const UncheckedIcon = () => <>🌞</>
 
 const ToggleButton = (props: {
         defaultChecked?: boolean,
-        onChange?: Function,
+        onChange?: FunctionAny,
         disabled?: boolean,
         className?: string,
         icons?: {
@@ -17,42 +18,42 @@ const ToggleButton = (props: {
         }
     }) => {
     props = {...ToggleButton.defaultProps, ...props}
-    const [toggle, setToggle] = useState(false);
-    const { defaultChecked, onChange, disabled, className } = props;
+    const [toggle, setToggle] = useState(false)
+    const { defaultChecked, onChange, disabled, className } = props
 
     useEffect(() => {
         if (defaultChecked) {
             setToggle(defaultChecked)
         }
-    }, [defaultChecked]);
+    }, [defaultChecked])
 
     const triggerToggle = () => {
         if ( disabled ) {
-            return;
+            return
         }
 
-        setToggle(!toggle);
+        setToggle(!toggle)
 
         if ( typeof onChange === 'function' ) {
-            onChange(!toggle);
+            onChange(!toggle)
         }
     }
 
     const getIcon = (type: keyof typeof ToggleButton.defaultProps.icons) => {
-        const { icons } = props;
+        const { icons } = props
         if ( ! icons ) {
-            return null;
+            return null
         }
 
         return icons[type] === undefined ?
             ToggleButton.defaultProps?.icons[type] :
-            icons[type];
+            icons[type]
     }
 
     const toggleClasses = classNames('wrg-toggle', {
         'wrg-toggle--checked': toggle,
         'wrg-toggle--disabled': disabled
-    }, className);
+    }, className)
 
     return (
         <div onClick={triggerToggle} className={toggleClasses}>
@@ -67,7 +68,7 @@ const ToggleButton = (props: {
             <div className="wrg-toggle-circle"></div>
             <input type="checkbox" aria-label="Toggle Button" className="wrg-toggle-input" />
         </div>
-    );
+    )
 }
 
 ToggleButton.defaultProps = {
@@ -75,7 +76,7 @@ ToggleButton.defaultProps = {
         checked: <CheckedIcon />,
         unchecked: <UncheckedIcon />
     }
-};
+}
 
 ToggleButton.propTypes = {
     disabled: PropTypes.bool,
@@ -89,6 +90,6 @@ ToggleButton.propTypes = {
             unchecked: PropTypes.node
         })
     ])
-};
+}
 
-export { ToggleButton };
+export { ToggleButton }

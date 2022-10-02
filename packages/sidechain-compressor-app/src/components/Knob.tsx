@@ -1,7 +1,8 @@
-import { Component } from "react";
-import "./Knob.css";
+import { Component } from "react"
+import { FunctionAny } from "../utils/types"
+import "./Knob.css"
 
-type MouseEventFix = MouseEvent & {target: {getBoundingClientRect: Function}}
+type MouseEventFix = MouseEvent & {target: {getBoundingClientRect: FunctionAny}}
 interface KnobProps {
     degrees: number
     size: number
@@ -10,7 +11,7 @@ interface KnobProps {
     value: number
     numTicks: number
     color: boolean
-    onChange: Function
+    onChange: FunctionAny
 }
 
 interface State {
@@ -27,7 +28,7 @@ export class Knob extends Component<KnobProps, State> {
         value: 0,
         color: true,
         onChange: () => void 0
-    };
+    }
 
     fullAngle: number
     startAngle: number
@@ -36,29 +37,29 @@ export class Knob extends Component<KnobProps, State> {
     currentDeg: number
 
     constructor(props: KnobProps) {
-        super(props);
+        super(props)
         const {degrees, size, min, max, value} = this.props
-        this.fullAngle = degrees;
-        this.startAngle = (360 - degrees) / 2;
-        this.endAngle = this.startAngle + degrees;
-        this.margin = size * 0.15;
+        this.fullAngle = degrees
+        this.startAngle = (360 - degrees) / 2
+        this.endAngle = this.startAngle + degrees
+        this.margin = size * 0.15
         this.currentDeg = Math.floor(
             this.convertRange(min, max, this.startAngle, this.endAngle, value)
-        );
-        this.state = { deg: this.currentDeg };
+        )
+        this.state = { deg: this.currentDeg }
     }
 
     startDrag = (e: React.MouseEvent<HTMLDivElement> & MouseEventFix) => {
 
-        e.preventDefault();
-        const knob = e.target.getBoundingClientRect();
+        e.preventDefault()
+        const knob = e.target.getBoundingClientRect()
         const pts = {
             x: knob.left + knob.width / 2,
             y: knob.top + knob.height / 2
-        };
+        }
         const moveHandler = (e: MouseEvent) => {
-            this.currentDeg = this.getDeg(e.clientX, e.clientY, pts);
-            if (this.currentDeg === this.startAngle) this.currentDeg--;
+            this.currentDeg = this.getDeg(e.clientX, e.clientY, pts)
+            if (this.currentDeg === this.startAngle) this.currentDeg--
             let newValue = this.convertRange(
                 this.startAngle,
                 this.endAngle,
@@ -67,36 +68,37 @@ export class Knob extends Component<KnobProps, State> {
                 this.currentDeg
             )
             newValue = Math.max(Math.min(newValue, this.props.max), this.props.min)
-            this.setState({ deg: this.currentDeg });
-            this.props.onChange(newValue);
-        };
-        document.addEventListener("mousemove", moveHandler);
+            this.setState({ deg: this.currentDeg })
+            this.props.onChange(newValue)
+        }
+        document.addEventListener("mousemove", moveHandler)
         document.addEventListener("mouseup", e => {
-            document.removeEventListener("mousemove", moveHandler);
-        });
-    };
+            document.removeEventListener("mousemove", moveHandler)
+        })
+    }
 
     getDeg = (cX: number, cY: number, pts: {x: number, y: number}) => {
-        const x = cX - pts.x;
-        const y = cY - pts.y;
-        let deg = Math.atan(y / x) * 180 / Math.PI;
+        const x = cX - pts.x
+        const y = cY - pts.y
+        let deg = Math.atan(y / x) * 180 / Math.PI
         if ((x < 0 && y >= 0) || (x < 0 && y < 0)) {
-            deg += 90;
-        } else {
-            deg += 270;
+            deg += 90
         }
-        let finalDeg = Math.min(Math.max(this.startAngle, deg), this.endAngle);
-        return finalDeg;
-    };
+        else {
+            deg += 270
+        }
+        const finalDeg = Math.min(Math.max(this.startAngle, deg), this.endAngle)
+        return finalDeg
+    }
 
     convertRange = (oldMin: number, oldMax: number, newMin: number, newMax: number, oldValue: number) => {
-        return (oldValue - oldMin) * (newMax - newMin) / (oldMax - oldMin) + newMin;
-    };
+        return (oldValue - oldMin) * (newMax - newMin) / (oldMax - oldMin) + newMin
+    }
 
     renderTicks = () => {
-        let ticks = [];
-        const incr = this.fullAngle / this.props.numTicks;
-        const size = this.margin + this.props.size / 2;
+        const ticks = []
+        const incr = this.fullAngle / this.props.numTicks
+        const size = this.margin + this.props.size / 2
         for (let deg = this.startAngle; deg <= this.endAngle; deg += incr) {
             const tick = {
                 deg: deg,
@@ -107,24 +109,24 @@ export class Knob extends Component<KnobProps, State> {
                     transform: "rotate(" + deg + "deg)",
                     transformOrigin: "top"
                 }
-            };
-            ticks.push(tick);
+            }
+            ticks.push(tick)
         }
-        return ticks;
-    };
+        return ticks
+    }
 
-    dcpy = (o: {}) => {
-        return JSON.parse(JSON.stringify(o));
-    };
+    dcpy = (o: Record<string, any>) => {
+        return JSON.parse(JSON.stringify(o))
+    }
 
     override render() {
-        let kStyle = {
+        const kStyle = {
             width: this.props.size,
             height: this.props.size
-        };
-        let iStyle = this.dcpy(kStyle);
-        let oStyle = this.dcpy(kStyle);
-        oStyle.margin = this.margin;
+        }
+        const iStyle = this.dcpy(kStyle)
+        const oStyle = this.dcpy(kStyle)
+        oStyle.margin = this.margin
         if (this.props.color) {
             oStyle.backgroundImage
                 = "radial-gradient(100% 70%,hsl(210, "
@@ -135,28 +137,28 @@ export class Knob extends Component<KnobProps, State> {
                 + Math.random() * 100
                 + ",20%,"
                 + this.currentDeg / 36
-                + "%))";
+                + "%))"
         }
-        iStyle.transform = "rotate(" + this.state.deg + "deg)";
+        iStyle.transform = "rotate(" + this.state.deg + "deg)"
 
         return (
             <div className="knob-container">
-            <div className="knob" style={kStyle}>
-            <div className="ticks"> {
-                this.props.numTicks
-                ? this.renderTicks().map((tick, i) => (
-                    <div key={i} className={"tick" + (tick.deg <= this.currentDeg ? " active" : "") } style={tick.tickStyle}/>
-                ))
-                : null
-            }</div>
-            <div className="knob outer" style={oStyle} onMouseDown={this.startDrag}>
-            <div className="knob inner" style={iStyle}>
-            <div className="grip" />
+                <div className="knob" style={kStyle}>
+                    <div className="ticks"> {
+                        this.props.numTicks
+                            ? this.renderTicks().map((tick, i) => (
+                                <div key={i} className={"tick" + (tick.deg <= this.currentDeg ? " active" : "") } style={tick.tickStyle}/>
+                            ))
+                            : null
+                    }</div>
+                    <div className="knob outer" style={oStyle} onMouseDown={this.startDrag}>
+                        <div className="knob inner" style={iStyle}>
+                            <div className="grip" />
+                        </div>
+                    </div>
+                </div>
             </div>
-            </div>
-            </div>
-            </div>
-        );
+        )
     }
 }
 

@@ -22,5 +22,7 @@ async function main() {
     }
 
     remove("node_modules")
+    remove("package-lock.json")
+    remove("bun.lockb")
 }
 main()
