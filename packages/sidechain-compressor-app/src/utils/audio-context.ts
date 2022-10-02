@@ -23,7 +23,7 @@ export async function createAudioContext(contextOptions?: AudioContextOptions) {
                 audioContext = new AudioContext(contextOptions)
                 tryToStart()
             }
-            setTimeout(tryToStart, 200);
+            setTimeout(tryToStart, 200)
         }
         tryToStart()
     })
