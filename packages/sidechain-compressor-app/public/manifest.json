@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Compressor",
+  "name": "Sidechain Compressor using Audio Worklet",
   "icons": [
     {
       "src": "favicon.ico",
