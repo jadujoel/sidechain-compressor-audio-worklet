@@ -92,29 +92,32 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
 	 * @return {Boolean} Active source flag.
 	 */
     override process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: ParameterRecord): boolean {
-        if (this.firstTime) {
-            console.log("[processor]", "inputs", inputs.length, "outputs", outputs.length, "input", inputs[0].length, "output", outputs[0].length)
-            this.firstTime = false
+        try {
+            if (this.firstTime) {
+                console.log("[processor]", "inputs", inputs.length, "outputs", outputs.length, "input", inputs[0].length, "output", outputs[0].length)
+                this.firstTime = false
+            }
+            this.threshold = parameters.threshold[0]
+            this.ratio = parameters.ratio[0]
+            this.release_time = parameters.release[0]
+            this.attack_time = parameters.attack[0]
+            this.makeupGain = parameters.makeupGain[0]
+
+            const input = inputs[0]
+            const output = outputs[0]
+
+            const isSidechainConnected = inputs[1].length === inputs[0].length
+            const useSidechain = isSidechainConnected && this.useSidechain
+            const sidechainInput = useSidechain ? 1 : 0
+
+            for (let i = 0; i < input[0].length; ++i) {
+                const sidechain = 0.5 * (inputs[sidechainInput][0][i] + inputs[sidechainInput][1][i])
+                this.update(sidechain)
+                output[0][i] = input[0][i] * this.gain_linear
+                output[1][i] = input[1][i] * this.gain_linear
+            }
         }
-        this.threshold = parameters.threshold[0]
-        this.ratio = parameters.ratio[0]
-        this.release_time = parameters.release[0]
-        this.attack_time = parameters.attack[0]
-        this.makeupGain = parameters.makeupGain[0]
-
-        const input = inputs[0]
-        const output = outputs[0]
-
-        const isSidechainConnected = inputs[1].length === inputs[0].length
-        const useSidechain = isSidechainConnected && this.useSidechain
-        const sidechainInput = useSidechain ? 1 : 0
-
-        for (let i = 0; i < input[0].length; ++i) {
-            const sidechain = 0.5 * (inputs[sidechainInput][0][i] + inputs[sidechainInput][1][i])
-            this.update(sidechain)
-            output[0][i] = input[0][i] * this.gain_linear
-            output[1][i] = input[1][i] * this.gain_linear
-        }
+        catch {}
         return true
     }
 

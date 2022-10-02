@@ -59,23 +59,22 @@ export class Knob extends Component<KnobProps, State> {
         const moveHandler = (e: MouseEvent) => {
             this.currentDeg = this.getDeg(e.clientX, e.clientY, pts);
             if (this.currentDeg === this.startAngle) this.currentDeg--;
-            let newValue = Math.floor(
-            this.convertRange(
+            let newValue = this.convertRange(
                 this.startAngle,
                 this.endAngle,
                 this.props.min,
                 this.props.max,
                 this.currentDeg
-                )
-                );
-                this.setState({ deg: this.currentDeg });
-                this.props.onChange(newValue);
-            };
-            document.addEventListener("mousemove", moveHandler);
-            document.addEventListener("mouseup", e => {
-                document.removeEventListener("mousemove", moveHandler);
-            });
+            )
+            newValue = Math.max(Math.min(newValue, this.props.max), this.props.min)
+            this.setState({ deg: this.currentDeg });
+            this.props.onChange(newValue);
         };
+        document.addEventListener("mousemove", moveHandler);
+        document.addEventListener("mouseup", e => {
+            document.removeEventListener("mousemove", moveHandler);
+        });
+    };
 
     getDeg = (cX: number, cY: number, pts: {x: number, y: number}) => {
         const x = cX - pts.x;
@@ -127,16 +126,16 @@ export class Knob extends Component<KnobProps, State> {
         let oStyle = this.dcpy(kStyle);
         oStyle.margin = this.margin;
         if (this.props.color) {
-            oStyle.backgroundImage =
-            "radial-gradient(100% 70%,hsl(210, " +
-            this.currentDeg +
-            "%, " +
-            this.currentDeg / 5 +
-            "%),hsl(" +
-            Math.random() * 100 +
-            ",20%," +
-            this.currentDeg / 36 +
-            "%))";
+            oStyle.backgroundImage
+                = "radial-gradient(100% 70%,hsl(210, "
+                + this.currentDeg
+                + "%, "
+                + this.currentDeg / 5
+                + "%),hsl("
+                + Math.random() * 100
+                + ",20%,"
+                + this.currentDeg / 36
+                + "%))";
         }
         iStyle.transform = "rotate(" + this.state.deg + "deg)";
 

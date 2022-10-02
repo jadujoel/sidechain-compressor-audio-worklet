@@ -9,6 +9,8 @@
       "webworker",
       "DOM",
       "ESNext"
-    ]
+    ],
+    // "module": "CommonJS",
+    // "target": "es6"
   }
 }

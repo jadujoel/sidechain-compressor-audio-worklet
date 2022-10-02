@@ -2,8 +2,8 @@
    "name": "sidechain-compressor",
    "version": "0.0.1",
    "description": "sidechain compressor audio worklet",
-   "main": "dist/sidechain-compressor.js",
-   "types": "dist/@types/sidechain-compressor.d.ts",
+   "main": "dist/index.js",
+   "types": "dist/@types/index.d.ts",
    "scripts": {
       "clean": "rimraf dist",
       "build": "webpack --mode production",

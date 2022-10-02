@@ -3,16 +3,16 @@ import { Configuration } from "webpack"
 
 const config: Configuration = {
     entry: {
-        "sidechain-compressor": resolve("src", "sidechain-compressor.ts"),
-        // "processor": resolve("src", "processor.ts")
+        index: resolve("src", "index.ts"),
     },
     output: {
         filename: '[name].js',
         path: resolve('dist'),
-        // libraryTarget: "amd",
-        // library: "sidechain-compressor",
-        // umdNamedDefine: true,
-        // globalObject: "this",
+        libraryTarget: "umd",
+        // libraryTarget: "commonjs",
+        library: "sidechain-compressor",
+        umdNamedDefine: true,
+        globalObject: "this",
     },
     devtool: "source-map",
     resolve: {
@@ -24,12 +24,8 @@ const config: Configuration = {
             {test: /\.tsx?$/, loader: 'ts-loader'},
         ]
     },
-    plugins: [
-        // creates the processor.js that we import as a blob and create a url out of
-        // new ExecWebpackPlugin({before: "npm run build:processor"}),
-    ],
     optimization: {
-        minimize: true
+        minimize: false
     },
 }
 
