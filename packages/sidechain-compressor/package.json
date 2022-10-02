@@ -1,0 +1,28 @@
+{
+   "name": "sidechain-compressor",
+   "version": "0.0.1",
+   "description": "sidechain compressor audio worklet",
+   "main": "dist/sidechain-compressor.js",
+   "types": "dist/@types/sidechain-compressor.d.ts",
+   "scripts": {
+      "clean": "rimraf dist",
+      "build": "webpack --mode production",
+      "build:watch": "webpack --mode production --watch",
+      "test": "cypress run",
+      "test:ui": "cypress open",
+      "lint": "eslint -c ../../../.eslintrc.js \"src/**/*.{ts,tsx}\" --fix"
+   },
+   "keywords": [],
+   "author": "Joel Lof <jlof@evolution.com> (https://joellof.com/)",
+   "license": "MIT",
+   "devDependencies": {
+      "copy-webpack-plugin": "11.0.0",
+      "cypress": "*",
+      "ts-loader": "*",
+      "ts-node": "*",
+      "typescript": "*",
+      "webpack": "*",
+      "webpack-cli": "*",
+      "sidechain-compressor-processor": "*"
+   }
+}

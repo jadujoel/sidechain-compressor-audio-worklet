@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["src/**/*", "build/processor.ts"],
+  "exclude": ["node_modules", "dist", "src/__ignore"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "declarationDir": "dist/@types",
+    "lib": [
+      "webworker",
+      "DOM",
+      "ESNext"
+    ]
+  }
+}

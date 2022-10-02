@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "lib": ["esnext", "dom"],
+      "types": ["cypress", "../dist/@types/sidechain-compressor"],
+      "moduleResolution": "node"
+    },
+    "include": ["**/*.ts", "../src/**/*.ts", "../build/processor.ts"],
+    "downlevelIteration": true
+}

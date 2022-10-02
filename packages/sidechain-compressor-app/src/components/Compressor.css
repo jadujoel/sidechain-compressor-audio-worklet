@@ -1,0 +1,72 @@
+
+.Compressor {
+    background-image: radial-gradient(70% 50%, #555 6%, #333 90%);
+    box-shadow: 10px 5px 5px black;
+    border-radius: 14px;
+}
+
+.Compressor-header {
+    color: rgb(74, 164, 223);
+    text-align: center;
+    align-self: center;
+    font-size: xx-large;
+    font-weight: bolder;
+    font-family: 'Courier New', Courier, monospace;
+    display: grid;
+}
+
+.top-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.sidechain-toggle {
+    justify-self: center;
+    /* padding-right: 4em; */
+}
+
+.Compressor-controls {
+    display: grid;
+}
+
+.outputs-top {
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-self: center;
+    text-align: center;
+    width: 100%;
+}
+
+.outputs-bot {
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-self: center;
+    text-align: center;
+    width: 100%;
+}
+
+.knobs-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.labels-top {
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+}
+
+.labels-bot {
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+}
+
+.knobs-bot {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}

@@ -1,0 +1,6 @@
+__generated*
+__ignore*
+cypress/downloads
+cypress/screenshots
+cypress/support
+cypress/videos
