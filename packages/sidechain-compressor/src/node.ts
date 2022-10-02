@@ -1,4 +1,4 @@
-import { id } from "sidechain-compressor-processor";
+import { id } from "sidechain-compressor-processor"
 
 export type SidechainCompressorParameterIds = "threshold" | "ratio" | "attack" | "release" | "makeupGain"
 

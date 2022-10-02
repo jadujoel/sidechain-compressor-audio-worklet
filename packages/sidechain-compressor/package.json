@@ -10,7 +10,7 @@
       "build:watch": "webpack --mode production --watch",
       "test": "cypress run",
       "test:ui": "cypress open",
-      "lint": "eslint -c ../../../.eslintrc.js \"src/**/*.{ts,tsx}\" --fix"
+      "lint": "eslint -c ../../.eslintrc.js \"src/**/*.{ts,tsx}\" --fix"
    },
    "keywords": [],
    "author": "Joel Lof <jlof@evolution.com> (https://joellof.com/)",
