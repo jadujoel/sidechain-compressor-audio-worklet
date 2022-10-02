@@ -46,7 +46,7 @@ jobs:
           bun-version: 0.1.13
 
       - name: Install
-        run: npm install && bun install
+        run:  bun install && npm install
 
       - name: Build
         run: npm run build
