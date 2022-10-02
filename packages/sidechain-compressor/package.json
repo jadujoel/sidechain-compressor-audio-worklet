@@ -1,6 +1,6 @@
 {
    "name": "sidechain-compressor",
-   "version": "0.0.2",
+   "version": "0.1.0",
    "description": "sidechain compressor audio worklet",
    "main": "dist/index.js",
    "types": "dist/@types/index.d.ts",

@@ -1,6 +1,6 @@
 {
    "name": "sidechain-compressor-app",
-   "version": "0.0.2",
+   "version": "0.1.0",
    "homepage": "https://jadujoel.github.io/sidechain-compressor-audio-worklet/",
    "eslintConfig": {
       "extends": [
