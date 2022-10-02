@@ -1,9 +1,4 @@
-// export type SidechainCompressorParameters = { [P in keyof typeof SidechainCompressorProcessor.params]: Float32Array }
 type SidechainCompressorParameterKeys = typeof SidechainCompressorProcessor.parameterDescriptors[number]["name"]
-
-// export type StreamWorkletParameterDescriptors = typeof SidechainCompressorProcessor.parameterDescriptors
-// export type StreamWorkletAudioParamMap = Map<StreamWorkletParameterKeys, AudioParam>
-
 type ParameterRecord = Record<SidechainCompressorParameterKeys, Float32Array>
 
 /**
@@ -117,7 +112,9 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
                 output[1][i] = input[1][i] * this.gain_linear
             }
         }
-        catch {}
+        catch (e) {
+            console.debug(e)
+        }
         return true
     }
 

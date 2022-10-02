@@ -1,5 +1,4 @@
-import { SidechainCompressorInsert } from '../../../sidechain-compressor/dist/@types'
-import { FunctionAny } from '../utils/types'
+import type { SidechainCompressorInsert } from 'sidechain-compressor'
 import './Compressor.css'
 import { createApp } from './create-app'
 import { Knob } from "./Knob"
@@ -8,8 +7,6 @@ import { ToggleButton } from "./ToggleButton"
 const thresholdDefault = -18 as const
 
 let compressor: SidechainCompressorInsert
-
-let thresholdChanged: FunctionAny = () => {}
 
 const defaultCb = (v: number): void => void 0
 
@@ -54,7 +51,6 @@ createApp().then((v) => {
     compressor.node.port.postMessage(isEnabled ? "disable-sidechain" : "enable-sidechain")
   }
 })
-
 
 export const Compressor = () => {
     return <div className="Compressor">

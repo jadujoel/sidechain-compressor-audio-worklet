@@ -11,9 +11,7 @@ export async function createApp() {
     const loop = true as const
     const duration = undefined
     const offset = 0 as const
-
-    const now = () => audioContext.currentTime
-
+    
     const musicBuffer = await getBuffer(music)
     const sidechainBuffer = await getBuffer(sidechain)
 

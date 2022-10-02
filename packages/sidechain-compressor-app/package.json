@@ -10,7 +10,8 @@
   "license": "MIT",
   "scripts": {
     "build": "react-scripts build",
-    "serve": "serve -s build"
+    "serve": "serve -s build",
+    "lint": "eslint -c ../../.eslintrc.js \"src/**/*.{ts,tsx}\" --fix"
   },
   "devDependencies": {
     "react-refresh": "0.10.0",
