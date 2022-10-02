@@ -9,7 +9,7 @@
   "author": "Joel Lof <jlof@evolution.com> (https://joellof.com/)",
   "license": "MIT",
   "scripts": {
-    "build": "bun react-scripts build",
+    "build": "react-scripts build",
     "serve": "serve -s build"
   },
   "devDependencies": {
