@@ -24,7 +24,7 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "predeploy": "npm run lint",
-    "deploy": "npm version patch && npm run version && npm run package-sizes && git commit -m \"ci: update version\" && git push"
+    "deploy": "npm version patch && npm run version && npm run package-sizes && git commit -m \"ci: update version\""
   },
   "workspaces": [
     "packages/sidechain-compressor-app",
