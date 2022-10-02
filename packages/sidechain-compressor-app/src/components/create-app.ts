@@ -1,17 +1,18 @@
 import { SidechainCompressorInsert } from 'sidechain-compressor'
 import { createAudioContext } from '../utils/audio-context'
 import { getBuffer } from '../utils/buffer'
+import { concatAndResolveUrl } from '../utils/url'
 
 export async function createApp() {
     const audioContext = await createAudioContext()
     const compressor = await SidechainCompressorInsert.create({context: audioContext})
 
-    const music = "/audio/pad.mp4" as const
-    const sidechain = "/audio/kick.mp4" as const
+    const music = concatAndResolveUrl(window.location.href, "/audio/pad.mp4")
+    const sidechain = concatAndResolveUrl(window.location.href, "/audio/kick.mp4")
     const loop = true as const
     const duration = undefined
     const offset = 0 as const
-    
+
     const musicBuffer = await getBuffer(music)
     const sidechainBuffer = await getBuffer(sidechain)
 
