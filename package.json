@@ -29,7 +29,8 @@
   "workspaces": [
     "packages/sidechain-compressor-app",
     "packages/sidechain-compressor-processor",
-    "packages/sidechain-compressor"
+    "packages/sidechain-compressor",
+    "packages/audio-worklet-helpers"
   ],
   "engines": {
     "node": "16.11.1"

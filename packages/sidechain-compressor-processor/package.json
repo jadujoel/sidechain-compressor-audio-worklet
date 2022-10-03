@@ -21,6 +21,7 @@
       "ts-node": "*",
       "typescript": "*",
       "webpack": "*",
-      "webpack-cli": "*"
+      "webpack-cli": "*",
+      "audio-worklet-helpers": "*"
    }
 }

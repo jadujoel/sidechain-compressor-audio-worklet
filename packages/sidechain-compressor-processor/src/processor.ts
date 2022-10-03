@@ -14,14 +14,14 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
         return  [
             {
                 name: 'threshold',
-                defaultValue: 0,
+                defaultValue: 28,
                 minValue: -128,
                 maxValue: 0,
                 automationRate: 'k-rate'
             },
             {
                 name: 'ratio',
-                defaultValue: 1,
+                defaultValue: 4,
                 minValue: 1,
                 maxValue: 128,
                 automationRate: 'k-rate'
@@ -56,7 +56,7 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
 	 */
     constructor(options?: AudioWorkletNodeOptions) {
         super(options)
-        this.sampleRate = options?.processorOptions.sampleRate || 48000
+        this.sampleRate = options?.processorOptions?.sampleRate || 48000
         this.port.addEventListener("message", () => console.log("processor message listener"))
 
         this.port.onmessage = (messageEvent: MessageEvent<any>) => {
