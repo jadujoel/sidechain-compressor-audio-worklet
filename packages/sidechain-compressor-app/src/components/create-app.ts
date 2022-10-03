@@ -47,11 +47,5 @@ export async function createApp() {
 
     musicSource.start(audioContext.currentTime + 0.2, offset, duration)
     sidechainSource.start(audioContext.currentTime + 0.2, offset, duration)
-
-    compressorNode.parameters.get("threshold").value = -30
-    compressorNode.parameters.get("ratio").value = 40
-    compressorNode.parameters.get("attack").value = 0.02
-    compressorNode.parameters.get("release").value = 0.18
-    compressorNode.port.postMessage("enable-sidechain")
     return compressor
 }

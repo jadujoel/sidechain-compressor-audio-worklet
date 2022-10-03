@@ -1,6 +1,7 @@
 import "./App.css"
 import { Compressor } from "./components/Compressor"
 
+
 function App() {
     return (
         <div className="App">

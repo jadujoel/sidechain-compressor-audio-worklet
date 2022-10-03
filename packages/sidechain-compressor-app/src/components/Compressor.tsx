@@ -3,6 +3,9 @@ import './Compressor.css'
 import { createApp } from './create-app'
 import { Knob } from "./Knob"
 import { ToggleButton } from "./ToggleButton"
+import { audioWorkletPolyfill} from "audio-worklet-helpers"
+
+// audioWorkletPolyfill(true)
 
 const thresholdDefault = -18 as const
 
@@ -25,19 +28,32 @@ createApp().then((v) => {
     compressor = v
     Callbacks.threshold = (v: number) => {
         (document.getElementById("threshold-output") as HTMLOutputElement).value = String(v)
-        compressor.node.parameters.get("threshold").value = v
+        const threshold = compressor.node.parameters.get("threshold")
+        if (threshold) {
+            threshold.value = v
+        }
+
     }
     Callbacks.ratio = (v: number) => {
         (document.getElementById("ratio-output") as HTMLOutputElement).value = String(v)
-        compressor.node.parameters.get("ratio").value = v
+        const ratio = compressor.node.parameters.get("ratio")
+        if (ratio) {
+            ratio.value = v
+        }
     }
     Callbacks.attack = (v: number) => {
         (document.getElementById("attack-output") as HTMLOutputElement).value = String(v)
-        compressor.node.parameters.get("attack").value = v
+        const threshold = compressor.node.parameters.get("attack")
+        if (threshold) {
+            threshold.value = v
+        }
     }
     Callbacks.release = (v: number) => {
         (document.getElementById("release-output") as HTMLOutputElement).value = String(v)
-        compressor.node.parameters.get("release").value = v
+        const release = compressor.node.parameters.get("release")
+        if (release) {
+            release.value = v
+        }
     }
     Callbacks.mix = (v: number) => {
         (document.getElementById("mix-output") as HTMLOutputElement).value = String(v)
@@ -45,7 +61,10 @@ createApp().then((v) => {
     }
     Callbacks.makeupGain = (v: number) => {
         (document.getElementById("makeup-gain-output") as HTMLOutputElement).value = String(v)
-        compressor.node.parameters.get("makeupGain").value = v
+        const makeupGain = compressor.node.parameters.get("makeupGain")
+        if (makeupGain) {
+            makeupGain.value = v
+        }
     }
     Callbacks.sidechain = (isEnabled: boolean) => {
         compressor.node.port.postMessage(isEnabled ? "disable-sidechain" : "enable-sidechain")
