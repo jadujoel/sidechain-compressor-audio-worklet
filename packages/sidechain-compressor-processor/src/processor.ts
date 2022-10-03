@@ -14,7 +14,7 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
         return  [
             {
                 name: 'threshold',
-                defaultValue: 28,
+                defaultValue: -28,
                 minValue: -128,
                 maxValue: 0,
                 automationRate: 'k-rate'
@@ -66,6 +66,9 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
             else if (messageEvent.data === "enable-sidechain") {
                 this.useSidechain = true
             }
+            else if (messageEvent.data === "enable-logging") {
+                this.useLogging = true
+            }
             console.debug("[compressor message] data", messageEvent.data)
             console.debug("[compressor message] ports", messageEvent.ports)
             console.debug("[compressor message] target", messageEvent.target)
@@ -78,6 +81,7 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
     sampleRate = 48000
     firstTime = true
     useSidechain = true
+    useLogging = false
 
     /**
 	 * System-invoked process callback function.
@@ -113,7 +117,7 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
             }
         }
         catch (e) {
-            console.debug(e)
+            this.useLogging && console.debug(e)
         }
         return true
     }
@@ -136,8 +140,8 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
 
     attack_const = Math.exp(-1.0 / (this.attack_time * this.sampleRate))
     release_const = Math.exp(-1.0 / (this.release_time * this.sampleRate))
-
     level_lp_const = Math.exp(-1.0 / (this.attack_time * this.sampleRate))
+
     prev_level_lp_pow = 1.0E-6
     level_dB = 0.0
     above_threshold_dB = 0.0
@@ -153,6 +157,15 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
     c2 = 0
 
     update(signal: number) {
+        this.attack_const = Math.exp(-1.0 / (this.attack_time * this.sampleRate))
+        this.release_const = Math.exp(-1.0 / (this.release_time * this.sampleRate))
+        this.level_lp_const = Math.exp(-1.0 / (this.attack_time * this.sampleRate))
+        this.one_minus_attack_const = 1 - this.attack_const
+        this.one_minus_release_const = 1 - this.release_const
+        this.comp_ratio_const = 1.0 - (1.0 / this.ratio)
+
+        
+
         this.c1 = this.level_lp_const
         this.c2 = 1.0 - this.c1
 

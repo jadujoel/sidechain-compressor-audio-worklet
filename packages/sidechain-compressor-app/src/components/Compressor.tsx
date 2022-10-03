@@ -1,13 +1,12 @@
+import { audioWorkletPolyfill } from "audio-worklet-helpers"
 import type { SidechainCompressorInsert } from 'sidechain-compressor'
+import { precisionRound } from '../utils/pretty'
 import './Compressor.css'
 import { createApp } from './create-app'
 import { Knob } from "./Knob"
 import { ToggleButton } from "./ToggleButton"
-import { audioWorkletPolyfill} from "audio-worklet-helpers"
 
-// audioWorkletPolyfill(true)
-
-const thresholdDefault = -18 as const
+audioWorkletPolyfill(false)
 
 let compressor: SidechainCompressorInsert
 
@@ -23,53 +22,62 @@ const Callbacks = {
     sidechain: (isEnabled: boolean): void => void 0,
 }
 
-
-createApp().then((v) => {
+createApp()
+.then((v) => {
     compressor = v
-    Callbacks.threshold = (v: number) => {
-        (document.getElementById("threshold-output") as HTMLOutputElement).value = String(v)
-        const threshold = compressor.node.parameters.get("threshold")
-        if (threshold) {
-            threshold.value = v
-        }
+    const threshold = compressor.node.parameters.get("threshold")!
+    const ratio = compressor.node.parameters.get("ratio")!
+    const attack = compressor.node.parameters.get("attack")!
+    const release = compressor.node.parameters.get("release")!
+    const makeupGain = compressor.node.parameters.get("makeupGain")!
+    // const mix = compressor.node.parameters.get("mix")!
 
+    const thresholdOutput = document.getElementById("threshold-output") as HTMLOutputElement
+    const ratioOutput = document.getElementById("ratio-output") as HTMLOutputElement
+    const attackOutput = document.getElementById("attack-output") as HTMLOutputElement
+    const releaseOutput = document.getElementById("release-output") as HTMLOutputElement
+    const makeupGainOutput = document.getElementById("makeup-gain-output") as HTMLOutputElement
+    const mixOutput = document.getElementById("mix-output") as HTMLOutputElement
+
+    Callbacks.threshold = (v: number) => {
+        thresholdOutput.value = String(precisionRound(v, 1)) + " dBFS"
+        threshold.value = v
     }
     Callbacks.ratio = (v: number) => {
-        (document.getElementById("ratio-output") as HTMLOutputElement).value = String(v)
-        const ratio = compressor.node.parameters.get("ratio")
-        if (ratio) {
-            ratio.value = v
-        }
+        ratioOutput.value = String(precisionRound(v, 1))
+        ratio.value = v
     }
     Callbacks.attack = (v: number) => {
-        (document.getElementById("attack-output") as HTMLOutputElement).value = String(v)
-        const threshold = compressor.node.parameters.get("attack")
-        if (threshold) {
-            threshold.value = v
-        }
+        attackOutput.value = String(precisionRound(v * 1000, 0)) + " ms"
+        attack.value = v
     }
     Callbacks.release = (v: number) => {
-        (document.getElementById("release-output") as HTMLOutputElement).value = String(v)
-        const release = compressor.node.parameters.get("release")
-        if (release) {
-            release.value = v
-        }
+        releaseOutput.value = String(precisionRound(v * 1000, 0)) + " ms"
+        release.value = v
     }
     Callbacks.mix = (v: number) => {
-        (document.getElementById("mix-output") as HTMLOutputElement).value = String(v)
-    // compressor.node.parameters.get("mix").value = v
+        mixOutput.value = String(precisionRound(v * 100, 0)) + " %"
+        // mix.value = v
     }
     Callbacks.makeupGain = (v: number) => {
-        (document.getElementById("makeup-gain-output") as HTMLOutputElement).value = String(v)
-        const makeupGain = compressor.node.parameters.get("makeupGain")
-        if (makeupGain) {
-            makeupGain.value = v
-        }
+        makeupGainOutput.value = String(precisionRound(v, 1)) + " dB"
+        makeupGain.value = v
     }
     Callbacks.sidechain = (isEnabled: boolean) => {
         compressor.node.port.postMessage(isEnabled ? "disable-sidechain" : "enable-sidechain")
     }
+
+    Callbacks.threshold(threshold.value)
+    Callbacks.ratio(ratio.value)
+    Callbacks.attack(attack.value)
+    Callbacks.release(release.value)
+    Callbacks.makeupGain(makeupGain.value)
+    // Callbacks.mix(mix.value)
 })
+
+const attr = `size={100} numTick={25} degrees={260} color={false}`
+
+
 
 export const Compressor = () => {
     return <div className="Compressor">
@@ -85,7 +93,7 @@ export const Compressor = () => {
                 </div>
             </div>
             <div className="outputs-top">
-                <output id="threshold-output">{thresholdDefault}</output>
+                <output id="threshold-output">0</output>
                 <output id="attack-output">0</output>
                 <output id="mix-output">100</output>
             </div>
@@ -98,7 +106,7 @@ export const Compressor = () => {
                 <Knob
                     onChange={(v: number) => Callbacks.attack(v)}
                     size={100} numTicks={25} degrees={260} color={false}
-                    min={0.0001} max={4} value={0.2}
+                    min={0.001} max={0.08} value={0.04}
                 />
                 <Knob
                     onChange={(v: number) => Callbacks.mix(v)}
@@ -112,7 +120,7 @@ export const Compressor = () => {
                 <p>Mix</p>
             </div>
             <div className="outputs-bot">
-                <output id="ratio-output">0</output>
+                <output id="ratio-output">1</output>
                 <output id="release-output">0</output>
                 <output id="makeup-gain-output">0</output>
             </div>
@@ -125,12 +133,12 @@ export const Compressor = () => {
                 <Knob
                     onChange={(v: number) => Callbacks.release(v)}
                     size={100} numTicks={25} degrees={260} color={false}
-                    min={0.0001} max={4} value={0.2}
+                    min={0.001} max={0.08} value={0.04}
                 />
                 <Knob
                     onChange={(v: number) => Callbacks.makeupGain(v)}
                     size={100} numTicks={25} degrees={260} color={false}
-                    min={-24} max={24} value={0}
+                    min={-12} max={12} value={0}
                 />
             </div>
             <div className="labels-bot">
