@@ -8,14 +8,18 @@
       "clean": "rimraf dist",
       "build": "webpack --mode production",
       "build:watch": "webpack --mode production --watch",
-      "test": "echo \"no test specified\"",
+      "test": "cypress run",
+      "test:ui": "cypress open",
       "lint": "eslint -c ../../.eslintrc.js \"src/**/*.{ts,tsx}\" --fix"
    },
    "keywords": [],
    "author": "Joel Lof <jlof@evolution.com> (https://joellof.com/)",
    "license": "MIT",
    "devDependencies": {
+      "@cypress/webpack-preprocessor": "5.13.1",
       "copy-webpack-plugin": "11.0.0",
+      "cypress": "*",
+      "pass-through-processor": "file:../pass-through-processor",
       "ts-loader": "*",
       "ts-node": "*",
       "typescript": "*"

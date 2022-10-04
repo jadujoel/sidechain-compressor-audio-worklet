@@ -9,6 +9,6 @@
       "webworker",
       "DOM",
       "ESNext"
-    ]
-  }
+    ],
+  },
 }

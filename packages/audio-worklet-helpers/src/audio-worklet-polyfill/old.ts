@@ -1,4 +1,4 @@
-import { Realm, Scope } from './realm'
+import { ContextGlobalScope, Realm } from './realm'
 
 type AudioWorkletNodeScriptProcessor = {
     properties?: AudioParamDescriptor[]
@@ -12,13 +12,13 @@ type AudioWorkletNodeScriptProcessor = {
     process: AudioWorkletProcessor['process']
     instance?: AudioWorkletProcessor
     bufferSize: number
-    context: Scope
+    context: ContextGlobalScope
 } & AudioWorkletProcessor
 
 
 interface IProcessor {
     realm: Realm;
-    context: Scope;
+    context: ContextGlobalScope;
     Processor: AudioWorkletProcessor | typeof AudioWorkletProcessor;
     properties: readonly AudioParamDescriptor[];
 }
@@ -74,7 +74,7 @@ export const audioWorkletPolyfill = (force = false) => {
                         return r.text()
                     })
                     .then(code => {
-                        const context: Scope = {
+                        const context: ContextGlobalScope = {
                             sampleRate: this.$$context.sampleRate,
                             currentTime: this.$$context.currentTime,
                             AudioWorkletProcessor (this: any) {

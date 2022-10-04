@@ -28,11 +28,10 @@ const config: Configuration = {
         minimize: true
     },
     plugins: [
-        // new CopyWebpackPlugin({patterns: [
-        //     {from: resolve("src", "declarations"), to: resolve("dist", "declarations")}
-        // ]})
+        new CopyWebpackPlugin({patterns: [
+            {from: resolve("src", "declarations"), to: resolve("dist", "declarations")}
+        ]})
     ]
 }
 
 export default config
-
