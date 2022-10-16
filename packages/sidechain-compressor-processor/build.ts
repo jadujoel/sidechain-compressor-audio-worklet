@@ -67,9 +67,16 @@ packer.hooks.afterEmit.tap("create-index.ts", () => {
 
     const ts
         = `const js = \`${str}\`\n`
-        + "export const blob = new Blob([js], { type: 'application/javascript' })\n"
+        + "const blob = new Blob([js], { type: 'application/javascript' })\n"
         + "export const url = URL.createObjectURL(blob)\n"
         + `export const id = \`${id}\` as const\n`
+        + `export type SidechainCompressorProcessorMessages\n`
+        +  "    = 'sidechain-on'\n"
+        +  "    | 'sidechain-off'\n"
+        +  "    | 'bypass-on'\n"
+        +  "    | 'bypass-off'\n"
+        +  "    | 'logging-on'\n"
+        +  "    | 'logging-off'\n"
 
     writeFileSync(processorGeneratedTsPath, ts)
     unlinkSync(processorGeneratedJsPath)

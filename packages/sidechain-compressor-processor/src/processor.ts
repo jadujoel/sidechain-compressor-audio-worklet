@@ -41,6 +41,13 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
                 automationRate: 'k-rate'
             },
             {
+                name: "mix",
+                defaultValue: 1,
+                minValue: 0,
+                maxValue: 1,
+                automationRate: 'k-rate'
+            },
+            {
                 name: "makeupGain",
                 defaultValue: 0,
                 minValue: -128,
@@ -60,20 +67,30 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
         this.port.addEventListener("message", () => console.log("processor message listener"))
 
         this.port.onmessage = (messageEvent: MessageEvent<any>) => {
-            if (messageEvent.data === "disable-sidechain") {
-                this.useSidechain = false
+            const data = messageEvent.data
+            switch (data) {
+                case "sidechain-on": this.useSidechain = true
+                    break
+                case "sidechain-off": this.useSidechain = false
+                    break
+                case "bypass-on": this.isBypassed = true
+                    break
+                case "bypass-off": this.isBypassed = false
+                    break
+                case "logging-on": this.useLogging = true
+                    break
+                case "logging-off": this.useLogging = false
+                    break
+                default:
+                    break
             }
-            else if (messageEvent.data === "enable-sidechain") {
-                this.useSidechain = true
+            if (this.useLogging) {
+                console.debug("[compressor message] data", messageEvent.data)
+                console.debug("[compressor message] ports", messageEvent.ports)
+                console.debug("[compressor message] target", messageEvent.target)
+                console.debug("[compressor message] origin", messageEvent.origin)
+                console.debug("[compressor message] type", messageEvent.type)
             }
-            else if (messageEvent.data === "enable-logging") {
-                this.useLogging = true
-            }
-            console.debug("[compressor message] data", messageEvent.data)
-            console.debug("[compressor message] ports", messageEvent.ports)
-            console.debug("[compressor message] target", messageEvent.target)
-            console.debug("[compressor message] origin", messageEvent.origin)
-            console.debug("[compressor message] type", messageEvent.type)
         }
         this.port.postMessage('initialized')
     }
@@ -82,6 +99,7 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
     firstTime = true
     useSidechain = true
     useLogging = false
+    isBypassed = false
 
     /**
 	 * System-invoked process callback function.
@@ -96,11 +114,20 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
                 console.log("[processor]", "inputs", inputs.length, "outputs", outputs.length, "input", inputs[0].length, "output", outputs[0].length)
                 this.firstTime = false
             }
+            if (this.isBypassed) {
+                for (const [ib, inBus] of inputs.entries()) {
+                    for (const [ic, inChannel] of inBus.entries()) {
+                        outputs[ib][ic].set(inChannel)
+                    }
+                }
+                return true
+            }
             this.threshold = parameters.threshold[0]
             this.ratio = parameters.ratio[0]
             this.release_time = parameters.release[0]
             this.attack_time = parameters.attack[0]
             this.makeupGain = parameters.makeupGain[0]
+            const mix = parameters.mix[0]
 
             const input = inputs[0]
             const output = outputs[0]
@@ -110,10 +137,14 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
             const sidechainInput = useSidechain ? 1 : 0
 
             for (let i = 0; i < input[0].length; ++i) {
-                const sidechain = 0.5 * (inputs[sidechainInput][0][i] + inputs[sidechainInput][1][i])
-                this.update(sidechain)
-                output[0][i] = input[0][i] * this.gain_linear
-                output[1][i] = input[1][i] * this.gain_linear
+                const sidechainMono = 0.5 * (inputs[sidechainInput][0][i] + inputs[sidechainInput][1][i])
+                this.update(sidechainMono)
+                const inputL = input[0][i]
+                const inputR = input[1][i]
+                const compressedL = inputL * this.gain_linear
+                const compressedR = inputR * this.gain_linear
+                output[0][i] = inputL * (1 - mix) + compressedL * mix
+                output[1][i] = inputR * (1 - mix) + compressedR * mix
             }
         }
         catch (e) {
@@ -126,7 +157,6 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
     threshold = -30.0
     attack_time = 0.005
     release_time = 0.4
-
 
     // Initializing Params
     wav_pow = 0
@@ -164,7 +194,7 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
         this.one_minus_release_const = 1 - this.release_const
         this.comp_ratio_const = 1.0 - (1.0 / this.ratio)
 
-        
+
 
         this.c1 = this.level_lp_const
         this.c2 = 1.0 - this.c1

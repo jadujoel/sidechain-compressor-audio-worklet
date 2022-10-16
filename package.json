@@ -30,6 +30,7 @@
     "packages/pass-through-processor",
     "packages/sidechain-compressor-processor",
     "packages/sidechain-compressor",
+    "packages/app",
     "packages/sidechain-compressor-app",
     "packages/audio-worklet-processor-types",
     "packages/audio-worklet-helpers"

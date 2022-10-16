@@ -1,0 +1,17 @@
+html,
+body {
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+  /* background-color: rgb(43 43 43); */
+  background-color: white;
+}
+
+.App {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: 1fr;
+}

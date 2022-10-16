@@ -1,9 +1,7 @@
-import { url } from "sidechain-compressor-processor"
+import { url, type SidechainCompressorProcessorMessages } from "sidechain-compressor-processor"
 import { SidechainCompressorNode, SidechainCompressorNodeOptions } from "./node"
-
 export class SidechainCompressorInsertError extends Error {
     override name = "SidechainCompressorInsertError"
-
     constructor(message?: string) {
         super(message)
     }
@@ -12,7 +10,6 @@ export class SidechainCompressorInsertError extends Error {
 interface SidechainCompressorInsertOptions extends SidechainCompressorNodeOptions {
     node?: SidechainCompressorNode
 }
-
 
 export class SidechainCompressorInsert {
     static isPrepared = false
@@ -30,22 +27,74 @@ export class SidechainCompressorInsert {
     }
 
     node: SidechainCompressorNode
+
     constructor({node, audioWorkletNodeOptions, context}: SidechainCompressorInsertOptions) {
         this.node = node || new SidechainCompressorNode(context, audioWorkletNodeOptions)
-        // this.node = new SidechainCompressorNode(audioContext, {
-        //     processorOptions: {
-        //         kernelBufferSize: 128,
-        //         channelCount: 2,
-        //         numSamplesInStream: 128
-        //     },
-        //     numberOfInputs: 2,
-        //     numberOfOutputs: 2,
-        //     outputChannelCount: [2]
-        // })
-        // {numberOfInputs: 2, numberOfOutputs: 1, channelCount: 2, outputChannelCount: [2]})
+
     }
 
     connect(...args: Parameters<typeof SidechainCompressorNode.prototype.connect>) {
         this.node.connect(...args)
+    }
+
+    #useSidechain = true
+    #useLogging = false
+    #isBypassed = false
+
+    get sidechain() {
+        return this.#useSidechain
+    }
+    set sidechain(use: boolean) {
+        this.#useSidechain = use
+        const msg: SidechainCompressorProcessorMessages = use ? "sidechain-on" : "sidechain-off"
+        this.node.port.postMessage(msg)
+    }
+    get bypass() {
+        return this.#isBypassed
+    }
+    
+    set bypass(use: boolean) {
+        this.#isBypassed = use
+        const msg: SidechainCompressorProcessorMessages = use ? "bypass-on" : "bypass-off"
+        this.node.port.postMessage(msg)
+    }
+    get logging() {
+        return this.#useLogging
+    }
+
+    set logging(use: boolean) {
+        this.#useLogging = use
+        const msg: SidechainCompressorProcessorMessages = use ? "logging-on" : "logging-off"
+        this.node.port.postMessage(msg)
+    }
+
+    get threshold() {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return (this.node.parameters as Map<string, AudioParam>).get("threshold")!
+    }
+
+    get ratio() {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return (this.node.parameters as Map<string, AudioParam>).get("ratio")!
+    }
+
+    get attack() {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return (this.node.parameters as Map<string, AudioParam>).get("attack")!
+    }
+
+    get release() {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return (this.node.parameters as Map<string, AudioParam>).get("release")!
+    }
+
+    get makeupGain() {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return (this.node.parameters as Map<string, AudioParam>).get("makeupGain")!
+    }
+
+    get mix() {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return (this.node.parameters as Map<string, AudioParam>).get("mix")!
     }
 }

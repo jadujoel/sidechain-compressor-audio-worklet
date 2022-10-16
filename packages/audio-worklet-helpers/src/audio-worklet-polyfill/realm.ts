@@ -5,17 +5,21 @@ export interface ScopeWithoutSelf {
     registerProcessor: (name: string, Processor: AudioWorkletProcessor) => void;
 }
 
-export interface ContextGlobalScope extends ScopeWithoutSelf {
+export interface Scope extends ScopeWithoutSelf {
     self?: ScopeWithoutSelf
 }
 
-export class Realm {
-    exec?: ReturnType<typeof eval>
+type $Hook = (self: Scope, console: Console) => ReturnType<typeof eval>
 
-    constructor(scope: ContextGlobalScope, parentElement: HTMLElement) {
+export class Realm {
+    // exec?: ReturnType<typeof eval>
+    exec?: ReturnType<$Hook['call']> | any
+
+    constructor(scope: Scope, parentElement: HTMLElement) {
 
         const frame = document.createElement('iframe')
-        frame.style.cssText = 'position:absolute;left:0;top:-999px;width:1px;height:1px;'
+        const hide = 'position:absolute;left:0;top:-999px;width:1px;height:1px;'
+        frame.style.cssText = hide
         parentElement.appendChild(frame)
 
         const win = frame.contentWindow
@@ -24,18 +28,15 @@ export class Realm {
         }
 
         const doc = win.document
+
         let vars = 'var window,$hook'
         for (const i in win) {
             if (!(i in scope) && i !== 'eval') {
-                vars += ','
-                vars += i
+                vars += `,${i}`
             }
         }
         for (const i in scope) {
-            vars += ','
-            vars += i
-            vars += '=self.'
-            vars += i
+            vars += `,${i}=self.${i}`
         }
 
         // need this to run eval
@@ -46,6 +47,8 @@ export class Realm {
         ))
         doc.body.appendChild(script)
 
-        this.exec = (win as Window & { $hook: (self: ContextGlobalScope, console: Console) => void }).$hook.call(scope, scope, console)
+        this.exec = (win as Window & { $hook: (self: Scope, console: Console) => void })
+            .$hook
+            .call(scope, scope, console)
     }
 }

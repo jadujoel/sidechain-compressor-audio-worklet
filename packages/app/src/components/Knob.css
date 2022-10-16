@@ -1,0 +1,182 @@
+
+.knob.container {
+  position: relative;
+  justify-self: center;
+  width: 68px;
+  height: 68px;
+  /* transform: scale(3); */
+  /* margin: 2px; */
+  margin: auto;
+  /* margin-top: 10px; */
+  top: 5px;
+}
+
+/* .knob {
+  position: absolute;
+  top: 0;
+} */
+
+.knob.base {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  left: 7px;
+  top: 7px;
+  border-radius: 50%;
+  background: #48484A;
+  /* box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.5); */
+}
+
+.knob.base.shadow {
+  /* top: 0; */
+  box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.6);
+  /* border-top: 4px solid white */
+}
+
+.knob.base.inline-shadow {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  left: 7px;
+  top: 7px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0px 0px 2px rgba(255, 255, 255, 0.5);
+}
+
+.knob.base.outline.white.stroke {
+  /* box-shadow: inset 0px 0px 4px rgba(255, 255, 255, 1); */
+  border-top: 2px solid rgba(255, 255, 255, 1);
+}
+
+.knob.indicator {
+  position: absolute;
+  width: 2px;
+  height: 9px;
+  left: 26px;
+  top: 45px;
+  background: #2C2C2E;
+}
+
+
+.knob.fill {
+  background: white;
+}
+
+.knob.indicator.fill {
+  position: absolute;
+  height: 7px;
+  top: 54px;
+}
+
+.glow {
+  filter: blur(2px);
+}
+/*
+.knob.track {
+  top: 0px;
+  left: 0px;
+  position: absolute;
+  height: 52px;
+  width: 52px;
+  border: 8px solid #2C2C2E;
+  border-radius: 50%;
+  border-bottom-color: transparent;
+} */
+
+.pizza {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border: 10px solid transparent;
+  border-radius: 50%;
+  border-bottom-color: #48484A;
+  height: 49px;
+  width: 49px;
+}
+
+.knob.track {
+  top: 0px;
+  left: 0px;
+  position: absolute;
+  height: 60px;
+  width: 60px;
+  /* box-shadow: 0px 2px 2px rgba(0, 0, 0, 1); */
+  /* box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 1); */
+}
+
+
+svg {
+  overflow: visible;
+  position: absolute;
+}
+
+
+
+svg.track-shadow {
+  /* filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4)); */
+  position: absolute;
+  top: 0px;
+  rotate: 45deg;
+  /* rotate: 135deg; */
+  /* top: 48px; */
+  /* left: -48px; */
+}
+
+svg.track-shadow > circle {
+  stroke: #2C2C2E;
+  stroke-width: 8px;
+  stroke-dasharray: 360;
+  /* stroke-dashoffset: 220; */
+  /* transform-origin: 90deg; */
+  /* transform: rotate(90deg); */
+  /* transform: rotate3d(90deg); */
+  /* rotate: 90deg; */
+}
+
+circle {
+  position: absolute;
+  fill: none;
+  stroke: white;
+  stroke-width: 8px;
+  stroke-dasharray: 360;
+}
+
+circle.blur {
+  filter: blur(4px);
+}
+
+circle.track-shadow {
+  stroke: red;
+  stroke-width: 1px;
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+
+.invert-x {
+  transform: scaleX(-1);
+}
+
+.invert-y {
+  transform: scaleY(-1);
+}
+
+div.outline {
+  position: absolute;
+}
+
+svg.outline {
+  position: absolute;
+  top: 0px;
+  rotate: 45deg;
+  transform: scale(0.92);
+}
+
+circle.outline {
+  stroke-width: 1px;
+  /* stroke: rgba(255, 255, 255, 0.2); */
+  stroke: url(#gradient);
+  stroke-dasharray: 360;
+  stroke-dashoffset: 170;
+  /* filter: blur(0.2px); */
+}

@@ -28,7 +28,8 @@
       "web-vitals": "2.1.4",
       "typescript": "*",
       "sidechain-compressor": "file:../sidechain-compressor",
-      "audio-worklet-helpers": "*"
+      "pass-through-processor": "*",
+      "audio-worklet-helpers": "file:../audio-worklet-helpers"
    },
    "browserslist": {
       "production": [

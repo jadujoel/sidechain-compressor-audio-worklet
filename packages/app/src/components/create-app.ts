@@ -1,21 +1,13 @@
 import { SidechainCompressorInsert } from 'sidechain-compressor'
 import { createAudioContext } from '../utils/audio-context'
 import { getBuffer } from '../utils/buffer'
-// import { concatAndResolveUrl } from '../utils/url'
-import { url, id } from "pass-through-processor"
 
 export async function createApp() {
     const audioContext = await createAudioContext()
     const compressor = await SidechainCompressorInsert.create({context: audioContext})
-    await audioContext.audioWorklet.addModule(url)
-    // const compressor = {
-    //     node: new AudioWorkletNode(audioContext, id),
-    //     connect(destinationNode: AudioNode, output?: number | undefined, input?: number | undefined) {
-    //         return compressor.node.connect(destinationNode, output, input)
-    //     }
-    // }
 
-    const music = new URL("/audio/pad.mp4", window.location.href)
+    const music = new URL("/audio/happy.mp3", window.location.href)
+    // const music = new URL("/audio/pad.mp4", window.location.href)
     const sidechain = new URL("/audio/kick.mp4", window.location.href)
     const loop = true as const
     const duration = undefined
@@ -53,7 +45,7 @@ export async function createApp() {
         .connect(masterGain)
         .connect(audioContext.destination)
 
-    musicSource.start(audioContext.currentTime + 0.2, offset, duration)
-    sidechainSource.start(audioContext.currentTime + 0.2, offset, duration)
+    // musicSource.start(audioContext.currentTime + 0.2, offset, duration)
+    // sidechainSource.start(audioContext.currentTime + 0.2, offset, duration)
     return compressor
 }

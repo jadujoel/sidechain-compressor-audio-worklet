@@ -1,9 +1,15 @@
-import { getProcessorsForContext } from './processor'
-import { ContextGlobalScope, Realm } from './realm'
-import { IProcessor, mAudioWorkletNode } from './types'
+import { getProcessorsForContext } from "./get-processors-for-context"
+import { mAudioWorkletNode } from "./types"
 
 const PROCESS_PARAMS: Float32Array[] = []
 let nextPort: MessagePort | null
+
+export class mAudioWorkletProcessor  {
+    port: MessagePort | null
+    constructor(options?: AudioWorkletNodeOptions) {
+        this.port = nextPort
+    }
+}
 
 // We cannot make class here since we need to return the scriptprocessor itself, with some overriden properties.
 export function mAudioWorkletNode(context: BaseAudioContext, name: string, options?: AudioWorkletNodeOptions) {
@@ -44,7 +50,10 @@ export function mAudioWorkletNode(context: BaseAudioContext, name: string, optio
             arr.fill(value.value)
             parameters[key] = arr
         })
-        this.processor?.realm.exec(
+        if (!this.processor) {
+            return
+        }
+        this.processor.realm.exec(
             'self.sampleRate=sampleRate=' + this.context.sampleRate + ';'
             + 'self.currentTime=currentTime=' + this.context.currentTime
         )
@@ -63,50 +72,5 @@ export function mAudioWorkletNode(context: BaseAudioContext, name: string, optio
             }
             return out
         }
-    }
-}
-
-export class mAudioWorklet implements mAudioWorklet {
-    #context: AudioContext
-    constructor (audioContext?: AudioContext) {
-        this.#context = audioContext || new AudioContext()
-    }
-
-    async addModule(url: string | URL, options?: WorkletOptions & { transpile?: (v: string) => void }) {
-        const response = await fetch(url)
-        if (!response.ok) {
-            throw Error(`${response.status}`)
-        }
-        const code = response.text()
-
-        class mAudioWorkletProcessor  {
-            port: MessagePort | null
-            constructor(options?: AudioWorkletNodeOptions) {
-                this.port = nextPort
-            }
-        }
-
-        const audioContextScope: ContextGlobalScope = {
-            sampleRate: this.#context.sampleRate,
-            currentTime: this.#context.currentTime,
-            AudioWorkletProcessor: mAudioWorkletProcessor as any,
-            // AudioWorkletProcessor(this: AudioWorkletProcessor) {
-            // so we can override non-writable property
-            // (this as any).port = nextPort
-            // },
-            registerProcessor: (name: string, Processor: AudioWorkletProcessor) => {
-                const processors = getProcessorsForContext(this.#context)
-                const processor: IProcessor = {
-                    realm,
-                    context: audioContextScope,
-                    Processor,
-                    properties: Processor.parameterDescriptors || []
-                }
-                processors[name] = processor
-            }
-        }
-        audioContextScope.self = audioContextScope
-        const realm = new Realm(audioContextScope, document.documentElement)
-        realm.exec(((options && options.transpile) || String)(await code))
     }
 }

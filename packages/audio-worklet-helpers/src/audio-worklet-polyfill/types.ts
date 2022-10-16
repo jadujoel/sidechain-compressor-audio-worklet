@@ -1,4 +1,4 @@
-import { ContextGlobalScope, Realm } from "./realm"
+import { Realm, Scope } from "./realm"
 
 export type mAudioWorkletNode = {
     properties?: AudioParamDescriptor[]
@@ -12,7 +12,7 @@ export type mAudioWorkletNode = {
     process: AudioWorkletProcessor['process']
     instance?: AudioWorkletProcessor
     bufferSize: number
-    context: ContextGlobalScope
+    context: Scope
 } & AudioWorkletProcessor
 
 export interface IAudioWorkletNode extends AudioWorkletNode {
@@ -27,7 +27,7 @@ export interface IAudioWorklet extends AudioWorklet {
 
 export interface IProcessor {
     realm: Realm;
-    context: ContextGlobalScope;
+    context: Scope;
     Processor: AudioWorkletProcessor | typeof AudioWorkletProcessor;
     properties: readonly AudioParamDescriptor[];
 }

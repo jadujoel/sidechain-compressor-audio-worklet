@@ -1,3 +1,3 @@
-import { audioWorkletPolyfill } from "./old"
-audioWorkletPolyfill()
-export { audioWorkletPolyfill }
+import { installer } from "./installer"
+installer()
+export { installer }

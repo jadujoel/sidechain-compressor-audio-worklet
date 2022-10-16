@@ -1,4 +1,3 @@
-import { audioWorkletPolyfill } from "audio-worklet-helpers"
 import type { SidechainCompressorInsert } from 'sidechain-compressor'
 import { precisionRound } from '../utils/pretty'
 import './Compressor.css'
@@ -6,78 +5,71 @@ import { createApp } from './create-app'
 import { Knob } from "./Knob"
 import { ToggleButton } from "./ToggleButton"
 
-audioWorkletPolyfill(false)
+// audioWorkletPolyfill(true)
 
-let compressor: SidechainCompressorInsert
-
-const defaultCb = (v: number): void => void 0
+const defaultCallback = (v: number): void => void 0
 
 const Callbacks = {
-    threshold: defaultCb,
-    ratio: defaultCb,
-    attack: defaultCb,
-    release: defaultCb,
-    mix: defaultCb,
-    makeupGain: defaultCb,
+    threshold: defaultCallback,
+    ratio: defaultCallback,
+    attack: defaultCallback,
+    release: defaultCallback,
+    mix: defaultCallback,
+    makeupGain: defaultCallback,
     sidechain: (isEnabled: boolean): void => void 0,
+    bypass: (isEnabled: boolean): void => void 0,
 }
 
 createApp()
-.then((v) => {
-    compressor = v
-    const threshold = compressor.node.parameters.get("threshold")!
-    const ratio = compressor.node.parameters.get("ratio")!
-    const attack = compressor.node.parameters.get("attack")!
-    const release = compressor.node.parameters.get("release")!
-    const makeupGain = compressor.node.parameters.get("makeupGain")!
-    // const mix = compressor.node.parameters.get("mix")!
-
-    const thresholdOutput = document.getElementById("threshold-output") as HTMLOutputElement
-    const ratioOutput = document.getElementById("ratio-output") as HTMLOutputElement
-    const attackOutput = document.getElementById("attack-output") as HTMLOutputElement
-    const releaseOutput = document.getElementById("release-output") as HTMLOutputElement
-    const makeupGainOutput = document.getElementById("makeup-gain-output") as HTMLOutputElement
-    const mixOutput = document.getElementById("mix-output") as HTMLOutputElement
-
+.then((compressor) => {
+    const Outputs = {
+        threshold: document.getElementById("threshold-output") as HTMLOutputElement,
+        ratio: document.getElementById("ratio-output") as HTMLOutputElement,
+        attack: document.getElementById("attack-output") as HTMLOutputElement,
+        release: document.getElementById("release-output") as HTMLOutputElement,
+        makeupGain: document.getElementById("makeup-gain-output") as HTMLOutputElement,
+        mix: document.getElementById("mix-output") as HTMLOutputElement,
+    } as const
+    
     Callbacks.threshold = (v: number) => {
-        thresholdOutput.value = String(precisionRound(v, 1)) + " dBFS"
-        threshold.value = v
+        Outputs.threshold.value = String(precisionRound(v, 1)) + " dBFS"
+        compressor.threshold.value = v
     }
     Callbacks.ratio = (v: number) => {
-        ratioOutput.value = String(precisionRound(v, 1))
-        ratio.value = v
+        Outputs.ratio.value = String(precisionRound(v, 1))
+        compressor.ratio.value = v
     }
     Callbacks.attack = (v: number) => {
-        attackOutput.value = String(precisionRound(v * 1000, 0)) + " ms"
-        attack.value = v
+        Outputs.attack.value = String(precisionRound(v * 1000, 0)) + " ms"
+        compressor.attack.value = v
     }
     Callbacks.release = (v: number) => {
-        releaseOutput.value = String(precisionRound(v * 1000, 0)) + " ms"
-        release.value = v
+        Outputs.release.value = String(precisionRound(v * 1000, 0)) + " ms"
+        compressor.release.value = v
     }
     Callbacks.mix = (v: number) => {
-        mixOutput.value = String(precisionRound(v * 100, 0)) + " %"
-        // mix.value = v
+        Outputs.mix.value = String(precisionRound(v * 100, 0)) + " %"
+        compressor.mix.value = v
     }
     Callbacks.makeupGain = (v: number) => {
-        makeupGainOutput.value = String(precisionRound(v, 1)) + " dB"
-        makeupGain.value = v
+        Outputs.makeupGain.value = String(precisionRound(v, 1)) + " dB"
+        compressor.makeupGain.value = v
     }
     Callbacks.sidechain = (isEnabled: boolean) => {
-        compressor.node.port.postMessage(isEnabled ? "disable-sidechain" : "enable-sidechain")
+        compressor.sidechain = !isEnabled
     }
 
-    Callbacks.threshold(threshold.value)
-    Callbacks.ratio(ratio.value)
-    Callbacks.attack(attack.value)
-    Callbacks.release(release.value)
-    Callbacks.makeupGain(makeupGain.value)
-    // Callbacks.mix(mix.value)
+    Callbacks.bypass = (isEnabled: boolean) => {
+        compressor.bypass = !isEnabled
+    }
+
+    Callbacks.threshold(compressor.threshold.value)
+    Callbacks.ratio(compressor.ratio.value)
+    Callbacks.attack(compressor.attack.value)
+    Callbacks.release(compressor.release.value)
+    Callbacks.makeupGain(compressor.makeupGain.value)
+    Callbacks.mix(compressor.mix.value)
 })
-
-const attr = `size={100} numTick={25} degrees={260} color={false}`
-
-
 
 export const Compressor = () => {
     return <div className="Compressor">
@@ -89,7 +81,8 @@ export const Compressor = () => {
                 <div className="empty"></div>
                 <div className="empty"></div>
                 <div className="sidechain-toggle">
-                    <ToggleButton onChange={(v: any) => Callbacks.sidechain(v)}/>
+                    <ToggleButton onChange={(isEnabled: boolean) => Callbacks.sidechain(isEnabled)}/>
+                    <ToggleButton onChange={(isEnabled: boolean) => Callbacks.bypass(isEnabled)}/>
                 </div>
             </div>
             <div className="outputs-top">

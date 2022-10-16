@@ -9,18 +9,6 @@ export interface SidechainCompressorAudioParamMap extends AudioParamMap {
 	get: (key: SidechainCompressorParameterIds) => AudioParam;
 }
 
-// These types / interfaces / declaration is so we can get better defined types on parameters for intellisense.
-type ModifyParametersType<T, R> = Omit<T, 'parameters'> & R;
-type SidechainCompressorAudioWorkletNode = ModifyParametersType<AudioWorkletNode, { parameters: SidechainCompressorAudioParamMap }>
-
-// Modify the AudioWorkletNode declared types, now if we do compressor.parameters.get("threshold")
-// we eliminate the possibility of undefined on the params we have specified
-// eslint-disable-next-line no-var
-declare var AudioWorkletNode: {
-    prototype: SidechainCompressorAudioWorkletNode;
-    new(context: BaseAudioContext, name: string, options?: AudioWorkletNodeOptions): SidechainCompressorAudioWorkletNode;
-}
-
 export interface SidechainCompressorNodeOptions {
     context: AudioContext,
     audioWorkletNodeOptions?: AudioWorkletNodeOptions
@@ -28,7 +16,7 @@ export interface SidechainCompressorNodeOptions {
 
 // safer to do window.AudioWorklet node rather than just AudioWorkletNode for it to work in old react versions
 // https://stackoverflow.com/questions/49971779/error-audioworkletnode-is-undefined-in-react-app
-export class SidechainCompressorNode extends window.AudioWorkletNode { //implements SidechainCompressorAudioWorkletNode {
+export class SidechainCompressorNode extends window.AudioWorkletNode {
     constructor(context: AudioContext, audioWorkletNodeOptions: AudioWorkletNodeOptions = {
         processorOptions: {
             sampleRate: context.sampleRate
