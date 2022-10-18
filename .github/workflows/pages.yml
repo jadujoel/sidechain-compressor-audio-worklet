@@ -41,7 +41,7 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm install --ignore-optional=false && npm install turbo
+        run: npm install --ignore-optional=false
 
       - name: Build
         run: npm run build
