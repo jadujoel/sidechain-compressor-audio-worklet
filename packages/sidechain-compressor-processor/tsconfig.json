@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src/**/*", "../audio-worklet-helpers/dist/declarations/AudioWorkletProcessor.d.ts"],
+  "include": ["src/**/*", "../audio-worklet-helpers/declarations/AudioWorkletProcessor.d.ts"],
   "exclude": ["node_modules", "dist", "src/__ignore"],
   "compilerOptions": {
     "rootDir": "src",
