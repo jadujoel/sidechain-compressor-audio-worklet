@@ -22,10 +22,10 @@ const Callbacks = {
 }
 
 const Defaults = {
-    threshold: -28,
+    threshold: -36,
     ratio: 4,
-    attack: 0.005,
-    release: 0.005,
+    attack: 0.044,
+    release: 0.070,
     mix: 1,
     makeupGain: 0,
 } as const
@@ -95,6 +95,13 @@ createApp().then(compressor => {
         compressor.bypass = isEnabled
     }
 
+    compressor.threshold.value = Defaults.threshold
+    compressor.ratio.value = Defaults.ratio
+    compressor.attack.value = Defaults.attack
+    compressor.release.value = Defaults.release
+    compressor.makeupGain.value = Defaults.makeupGain
+    compressor.mix.value = Defaults.mix
+
     Callbacks.threshold(compressor.threshold.value)
     Callbacks.ratio(compressor.ratio.value)
     Callbacks.attack(compressor.attack.value)
@@ -159,7 +166,10 @@ export function Compressor() {
 
                     </div>
                     <div className="control mix">
-                        <div className="output"><output id={OutputNames.mix}>{Defaults.mix * 100}</output><label id={LabelNames.mix}>%</label></div>
+                        <div className="output">
+                            <output id={OutputNames.mix}>{Defaults.mix * 100}</output>
+                            <label id={LabelNames.mix}>%</label>
+                        </div>
                         <Knob
                             onChange={(v: number) => Callbacks.mix(v)}
                             min={0} max={1} value={Defaults.mix}
@@ -170,12 +180,12 @@ export function Compressor() {
 
                 <div className="frame grey toggles">
                     <div className="toggle">
-                        <ToggleButton onChange={(isEnabled: boolean) => Callbacks.sidechain(isEnabled)}/>
-                        <label className="white">sidechain</label>
+                        <ToggleButton onChange={(isEnabled: boolean) => Callbacks.sidechain(isEnabled)} defaultChecked={true}/>
+                        <p className='toggle-label'>Sidechain</p>
                     </div>
                     <div className="toggle">
                         <ToggleButton onChange={(isEnabled: boolean) => Callbacks.bypass(isEnabled)}/>
-                        <label className="white">bypass</label>
+                        <p className='toggle-label'>Bypass</p>
                     </div>
                 </div>
             </div>

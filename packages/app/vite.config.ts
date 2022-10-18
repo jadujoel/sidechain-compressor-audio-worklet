@@ -5,11 +5,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
     plugins: [react()],
     optimizeDeps: {
-        include: ['sidechain-compressor'],
+        include: ['sidechain-compressor', 'audio-worklet-helpers'],
     },
     build: {
         commonjsOptions: {
-            include: [/sidechain-compressor/, /node_modules/],
+            include: [/sidechain-compressor/, /audio-worklet-helpers/, /node_modules/],
         }
     },
 })

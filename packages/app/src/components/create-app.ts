@@ -1,13 +1,20 @@
+import {audioWorkletPolyfill} from "audio-worklet-helpers"
 import { SidechainCompressorInsert } from 'sidechain-compressor'
 import { createAudioContext } from '../utils/audio-context'
 import { getBuffer } from '../utils/buffer'
 
+console.log(audioWorkletPolyfill)
 export async function createApp() {
+    await createAudioContext()
+    console.log("here")
+    audioWorkletPolyfill()
+    console.log("after")
     const audioContext = await createAudioContext()
+
     const compressor = await SidechainCompressorInsert.create({context: audioContext})
 
-    const music = new URL("/audio/happy.mp3", window.location.href)
-    // const music = new URL("/audio/pad.mp4", window.location.href)
+    // const music = new URL("/audio/happy.mp3", window.location.href)
+    const music = new URL("/audio/pad.mp4", window.location.href)
     const sidechain = new URL("/audio/kick.mp4", window.location.href)
     const loop = true as const
     const duration = undefined
@@ -45,7 +52,7 @@ export async function createApp() {
         .connect(masterGain)
         .connect(audioContext.destination)
 
-    // musicSource.start(audioContext.currentTime + 0.2, offset, duration)
-    // sidechainSource.start(audioContext.currentTime + 0.2, offset, duration)
+    musicSource.start(audioContext.currentTime + 0.2, offset, duration)
+    sidechainSource.start(audioContext.currentTime + 0.2, offset, duration)
     return compressor
 }

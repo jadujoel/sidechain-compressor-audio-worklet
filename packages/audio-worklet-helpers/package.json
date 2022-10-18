@@ -3,7 +3,7 @@
    "version": "0.1.3",
    "description": "Helpers for audio worklet using typescript with types and polyfills",
    "main": "dist/index.js",
-   "types": "dist/@types",
+   "types": "dist/@types/index.d.ts",
    "scripts": {
       "clean": "rimraf dist",
       "build": "webpack --mode production",

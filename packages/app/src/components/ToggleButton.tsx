@@ -34,39 +34,47 @@ const ToggleButton = (props: {
 
         setToggle(!toggle)
 
-        if ( typeof onChange === 'function' ) {
+        if (typeof onChange === 'function') {
             onChange(!toggle)
         }
     }
 
-    const getIcon = (type: keyof typeof ToggleButton.defaultProps.icons) => {
-        const { icons } = props
-        if ( ! icons ) {
-            return null
-        }
-
-        return icons[type] === undefined ?
-            ToggleButton.defaultProps?.icons[type] :
-            icons[type]
-    }
-
+    // 'checked': toggle,
+    // 'disabled': disabled,
     const toggleClasses = classNames('wrg-toggle', {
         'wrg-toggle--checked': toggle,
-        'wrg-toggle--disabled': disabled
+        'wrg-toggle--disabled': disabled,
+
     }, className)
+
+    // const cx = !toggle ? "16" : "37"
+    // const cy = !toggle ? "34" : "12"
+    const cx = "11"
+    const cy = "34"
 
     return (
         <div onClick={triggerToggle} className={toggleClasses}>
             <div className="wrg-toggle-container">
-                <div className="wrg-toggle-check">
-                    {/* <span>{ getIcon('checked') }</span> */}
-                </div>
-                <div className="wrg-toggle-uncheck">
-                    {/* <span>{ getIcon('unchecked') }</span> */}
-                </div>
+                <div className="wrg-toggle-circle">                <svg className={`wrg-toggle knob outline`} x="0px" y="0px" width="68px" height="68px">
+                    <defs>
+                        <linearGradient id="gradient" y1="0" y2="1">
+                            <stop stopColor="rgba(255,255,255,0.25)" offset="0"/>
+                            <stop stopColor="rgba(0,0,0,1)" offset="1"/>
+                        </linearGradient>
+                    </defs>
+                    <circle className={`outline`} cx={cx} cy={cy} r="21.5"/>
+                </svg></div>
+                {/* <svg className={`wrg-toggle knob outline`} x="0px" y="0px" width="68px" height="68px">
+                    <defs>
+                        <linearGradient id="gradient" y1="0" y2="1">
+                            <stop stopColor="rgba(255,255,255,0.25)" offset="0"/>
+                            <stop stopColor="rgba(0,0,0,1)" offset="1"/>
+                        </linearGradient>
+                    </defs>
+                    <circle className={`outline`} cx={cx} cy={cy} r="21.5"/>
+                </svg> */}
+                <input type="checkbox" aria-label="Toggle Button" className="wrg-toggle-input" />
             </div>
-            <div className="wrg-toggle-circle"></div>
-            <input type="checkbox" aria-label="Toggle Button" className="wrg-toggle-input" />
         </div>
     )
 }

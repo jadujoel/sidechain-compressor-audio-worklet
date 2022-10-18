@@ -6,8 +6,8 @@
   background-color: transparent;
   border: 0;
   padding: 0;
-  -webkit-touch-callout: none;
   user-select: none;
+  -webkit-touch-callout: none;
   -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
   -webkit-tap-highlight-color: transparent;
 }
@@ -61,21 +61,37 @@
   height: 24px;
   padding: 0;
   border-radius: 30px;
-  background-color: #4d4d4d;
+  background-color: #2C2C2E;
   transition: all 0.2s ease;
+  width: 72px;
+  height: 44px;
+  box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
 .wrg-toggle-circle {
   position: absolute;
-  top: 1px;
-  left: 1px;
-  width: 22px;
-  height: 22px;
+  top: 2px;
+  left: 2px;
+  width: 40px;
+  height: 40px;
   border: 1px solid #4d4d4d;
   border-radius: 50%;
-  background-color: #fafafa;
+  background-color: #48484A;
   box-sizing: border-box;
   transition: all 0.25s ease;
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.5);
+
+  /* background: linear-gradient(white, black); */
+}
+
+.wrg-toggle-circle.background {
+  background: transparent;
+  background-color: #4d4d4d;
+  border: transparent;
+  top: 0px;
+  left: 0px;
+  width: 38px;
+  height: 38px;
 }
 
 .wrg-toggle--checked .wrg-toggle-check {
@@ -87,11 +103,72 @@
 }
 
 .wrg-toggle--checked .wrg-toggle-circle {
-  left: 27px;
+  left: 30px;
 }
 
 .wrg-toggle--disabled {
   cursor: not-allowed;
   opacity: 0.5;
   transition: opacity 0.25s;
+}
+
+circle.checked {
+  display: relative;
+  left: 30px;
+}
+
+svg {
+  overflow: visible;
+  position: absolute;
+}
+
+svg.track-shadow {
+  position: absolute;
+  top: 0px;
+  rotate: 45deg;
+}
+
+svg.track-shadow > circle {
+  stroke: #2C2C2E;
+  stroke-width: 8px;
+  stroke-dasharray: 360;
+}
+
+circle {
+  position: absolute;
+  fill: none;
+  stroke: white;
+  stroke-width: 8px;
+  stroke-dasharray: 360;
+}
+
+circle.blur {
+  filter: blur(4px);
+}
+
+circle.track-shadow {
+  stroke: red;
+  stroke-width: 1px;
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+
+div.outline {
+  position: absolute;
+}
+
+svg.outline {
+  position: absolute;
+  top: 0px;
+  rotate: 45deg;
+  transform: scale(0.92);
+}
+
+circle.outline {
+  stroke-width: 1px;
+  /* stroke: rgba(255, 255, 255, 0.2); */
+  stroke: url(#gradient);
+  stroke-dasharray: 360;
+  stroke-dashoffset: 170;
+  /* filter: blur(0.2px); */
 }

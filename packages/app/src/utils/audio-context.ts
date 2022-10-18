@@ -8,6 +8,7 @@ export async function createAudioContext(contextOptions?: AudioContextOptions) {
     return new Promise<AudioContext>((resolve) => {
         if (audioContext?.state === "running") {
             resolve(audioContext)
+            return
         }
         // if audio context was not allowed to be started we need to wait for an user interaction before we can initialize
         const oninteraction = () => {

@@ -1,4 +1,3 @@
-import CopyWebpackPlugin from "copy-webpack-plugin"
 import { resolve } from "path"
 import { Configuration } from "webpack"
 const config: Configuration = {
@@ -35,4 +34,3 @@ const config: Configuration = {
 }
 
 export default config
-
