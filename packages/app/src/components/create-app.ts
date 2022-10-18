@@ -9,9 +9,9 @@ export async function createApp() {
     const audioContext = await createAudioContext()
 
     const compressor = await SidechainCompressorInsert.create({context: audioContext})
-    const base = "/sidechain-compressor-audio-worklet" as const
-    const music = new URL(base + "/audio/pad.mp4", window.location.href)
-    const sidechain = new URL(base + "audio/kick.mp4", window.location.href)
+    const audio = "/sidechain-compressor-audio-worklet/audio/" as const
+    const music = new URL(audio + "pad.mp4", window.location.href)
+    const sidechain = new URL(audio + "kick.mp4", window.location.href)
     const loop = true as const
     const duration = undefined
     const offset = 0 as const
