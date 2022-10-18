@@ -27,13 +27,12 @@
     "deploy": "npm version patch && npm run version && npm run package-sizes && git commit -m \"ci: update version\""
   },
   "workspaces": [
+    "packages/audio-worklet-processor-types",
+    "packages/audio-worklet-helpers",
     "packages/pass-through-processor",
     "packages/sidechain-compressor-processor",
     "packages/sidechain-compressor",
-    "packages/app",
-    "packages/sidechain-compressor-app",
-    "packages/audio-worklet-processor-types",
-    "packages/audio-worklet-helpers"
+    "packages/app"
   ],
   "engines": {
     "node": "16.11.1"

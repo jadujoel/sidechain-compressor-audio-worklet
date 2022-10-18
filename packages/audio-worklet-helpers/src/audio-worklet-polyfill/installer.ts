@@ -2,7 +2,7 @@ import { mAudioWorkletNode } from "./node"
 import type { IAudioWorklet, IAudioWorkletNode } from "./types"
 import { mAudioWorklet } from "./worklet"
 
-export function installer(force = false) { 
+export function installer(force = false) {
     console.log("installing polyfill")
     const hasScriptProcessor
         = "createScriptProcessor" in AudioContext.prototype
@@ -14,7 +14,7 @@ export function installer(force = false) {
     const shouldInstall
         = hasScriptProcessor && !hasAudioWorklet
         || force
-\
+
     console.log({hasScriptProcessor, hasAudioWorklet})
     if (shouldInstall) {
         self.AudioWorkletNode = mAudioWorkletNode as unknown as IAudioWorkletNode //mAudioWorkletNode
