@@ -2,7 +2,7 @@
   "name": "app",
   "private": true,
   "version": "0.0.1",
-  "homepage": "https://jadujoel.github.io/",
+  "homepage": "https://jadujoel.github.io/sidechain-compressor-audio-worklet/",
   "type": "module",
   "scripts": {
     "dev": "vite",
