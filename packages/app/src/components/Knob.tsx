@@ -3,11 +3,11 @@ import { clamp } from "../clamp"
 import { FunctionAny } from "../utils/types"
 import "./Knob.css"
 
-type MouseEventFix = MouseEvent & {target: {getBoundingClientRect: FunctionAny}}
-type TouchEventFix = TouchEvent & {target: {getBoundingClientRect: FunctionAny}}
-type MoveEvent
-    = React.MouseEvent<HTMLDivElement> & MouseEventFix
-    | React.TouchEvent<HTMLDivElement>  & TouchEventFix
+// type MouseEventFix = MouseEvent & {target: {getBoundingClientRect: FunctionAny}}
+// type TouchEventFix = TouchEvent & {target: {getBoundingClientRect: FunctionAny}}
+// type MoveEvent
+//     = React.MouseEvent<HTMLDivElement> & MouseEventFix
+//     | React.TouchEvent<HTMLDivElement>  & TouchEventFix
 
 interface KnobProps {
     degrees: number
@@ -49,19 +49,15 @@ export class Knob extends Component<KnobProps, State> {
         fillStart: Knob.FillStart.Left
     }
 
-    fullAngle: number
     startAngle: number
     endAngle: number
-    margin: number
     currentDeg: number
 
     constructor(props: KnobProps) {
         super(props)
-        const {degrees, size, min, max, value} = this.props
-        this.fullAngle = degrees
+        const {degrees, min, max, value} = this.props
         this.startAngle = (360 - degrees) / 2
         this.endAngle = this.startAngle + degrees
-        this.margin = size * 0.15
         this.currentDeg = Math.floor(
             convertRange(min, max, this.startAngle, this.endAngle, value)
         )

@@ -64,8 +64,6 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
     constructor(options?: AudioWorkletNodeOptions) {
         super(options)
         this.sampleRate = options?.processorOptions?.sampleRate || 48000
-        this.port.addEventListener("message", () => console.log("processor message listener"))
-
         this.port.onmessage = (messageEvent: MessageEvent<any>) => {
             const data = messageEvent.data
             switch (data) {
