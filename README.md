@@ -2,8 +2,8 @@
 A Sidechainable Compressor built on the WebAudio Audio Worklet API
 
 ## Quickstart
-clone this repo
-```
+```bash
+git clone git@github.com:jadujoel/sidechain-compressor-audio-worklet.git
 cd sidechain-compressor-audio-worklet
 npm install
 npm run build
