@@ -13,6 +13,11 @@
     "url": "https://github.com/jadujoel/sidechain-compressor-audio-worklet/issues"
   },
   "homepage": "https://github.com/jadujoel/sidechain-compressor-audio-worklet#readme",
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && npx cz --hook || true"
+    }
+  },
   "scripts": {
     "uninstall-all": "utils/uninstall-all.ts",
     "package-sizes": "utils/print-package-sizes.ts",
@@ -39,8 +44,8 @@
     "node": "16.11.1"
   },
   "dependencies": {
-    "turbo": "1.5.5",
-    "ts-node": "10.9.1"
+    "ts-node": "10.9.1",
+    "turbo": "1.5.5"
   },
   "devDependencies": {
     "@types/glob": "8.0.0",
@@ -48,9 +53,13 @@
     "@typescript-eslint/eslint-plugin": "5.38.0",
     "@typescript-eslint/parser": "5.38.0",
     "classnames": "2.3.2",
+    "commitizen": "4.2.5",
+    "conventional-changelog-conventionalcommits": "5.0.0",
     "cypress": "10.9.0",
+    "cz-conventional-changelog": "3.3.0",
     "eslint": "8.24.0",
     "glob": "8.0.1",
+    "husky": "8.0.1",
     "nodemon": "2.0.20",
     "npm-run-all": "4.1.5",
     "prop-types": "15.8.1",
@@ -62,9 +71,12 @@
     "typescript": "4.7.3",
     "webpack": "5.74.0",
     "webpack-cli": "4.10.0",
-    "yargs": "17.5.1",
-    "commitizen": "4.2.5",
-    "conventional-changelog-conventionalcommits": "5.0.0"
+    "yargs": "17.5.1"
   },
-  "packageManager": "npm@8.0.0"
+  "packageManager": "npm@8.0.0",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
