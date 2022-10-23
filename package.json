@@ -23,6 +23,7 @@
     "package-sizes": "utils/print-package-sizes.ts",
     "version": "utils/sync-version.ts && git add \"*/package.json\"",
     "reinstall": "npm run uninstall-all && npm install",
+    "postinstall": "husky install",
     "clean": "turbo run clean",
     "build": "turbo run build",
     "postbuild": "npm run package-sizes",
