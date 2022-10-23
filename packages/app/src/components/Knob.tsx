@@ -69,7 +69,7 @@ export class Knob extends Component<KnobProps, State> {
             return Object.prototype.hasOwnProperty.call(thing, "touches")
         }
         let startY = isTouchEvent(e)
-            ? this.currentDeg + e.touches[0].clientY
+            ? this.currentDeg + e.targetTouches[0].clientY
             : this.currentDeg + e.clientY
 
         e.preventDefault()
@@ -81,7 +81,7 @@ export class Knob extends Component<KnobProps, State> {
             const sensitivity = 1
 
             const clienty = isTouchEvent(e)
-                ? e.touches[0].clientY
+                ? e.targetTouches[0].clientY
                 : e.clientY
 
             const y = startY - clienty * sensitivity
