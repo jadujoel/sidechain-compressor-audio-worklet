@@ -19,19 +19,18 @@
     }
   },
   "scripts": {
+    "postinstall": "husky install",
     "uninstall-all": "utils/uninstall-all.ts",
     "package-sizes": "utils/print-package-sizes.ts",
     "version": "utils/sync-version.ts && git add \"*/package.json\"",
     "reinstall": "npm run uninstall-all && npm install",
-    "postinstall": "husky install",
     "clean": "turbo run clean",
     "build": "turbo run build",
+    "dev": "npm run dev --workspace=packages/app",
     "postbuild": "npm run package-sizes",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "predeploy": "npm run lint",
-    "deploy": "npm version patch && npm run version && npm run package-sizes && git commit -m \"ci: update version\"",
-    "commit": "cz"
+    "predeploy": "npm run lint"
   },
   "workspaces": [
     "packages/audio-worklet-processor-types",
