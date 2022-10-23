@@ -39,7 +39,7 @@ export function getPrettyNumber(value: number, precision = 2) {
 
 
 /** Returns how many digits there are before and after the decimal point */
-function getDigitSplitLengths(value: number) {
+export function getDigitSplitLengths(value: number) {
     const x = String(value)
     const beforeDot = x.match(/\d*/)
     const afterDot = x.match(/\.\d*/)

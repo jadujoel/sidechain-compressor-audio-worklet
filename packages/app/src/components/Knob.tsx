@@ -66,7 +66,7 @@ export class Knob extends Component<KnobProps, State> {
 
     startDrag = (e: MouseEvent | TouchEvent) => {
         const isTouchEvent = (thing: MouseEvent | TouchEvent): thing is TouchEvent => {
-            return Object.prototype.hasOwnProperty.call(e, "touches")
+            return Object.prototype.hasOwnProperty.call(thing, "touches")
         }
         let startY = isTouchEvent(e)
             ? this.currentDeg + e.touches[0].clientY
@@ -95,24 +95,29 @@ export class Knob extends Component<KnobProps, State> {
                 startY -= y - this.startAngle
             }
 
-            let newValue = convertRange(
+            const convertedRange = convertRange(
                 this.startAngle,
                 this.endAngle,
                 this.props.min,
                 this.props.max,
                 this.currentDeg
             )
-            newValue = Math.max(Math.min(newValue, this.props.max), this.props.min)
+
+            const newValue = Math.max(
+                Math.min(convertedRange, this.props.max),
+                this.props.min
+            )
             this.setState({ deg: this.currentDeg })
             this.props.onChange(newValue)
         }
         document.addEventListener("mousemove", moveHandler)
-        document.addEventListener("touchmove", moveHandler)
         document.addEventListener("mouseup", () => {
             document.removeEventListener("mousemove", moveHandler)
         })
+
+        document.addEventListener("touchmove", moveHandler)
         document.addEventListener("touchup", () => {
-            document.removeEventListener("mousemove", moveHandler)
+            document.removeEventListener("touchmove", moveHandler)
         })
     }
 

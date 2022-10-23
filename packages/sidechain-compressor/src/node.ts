@@ -17,15 +17,15 @@ export interface SidechainCompressorNodeOptions {
 // safer to do window.AudioWorklet node rather than just AudioWorkletNode for it to work in old react versions
 // https://stackoverflow.com/questions/49971779/error-audioworkletnode-is-undefined-in-react-app
 export class SidechainCompressorNode extends window.AudioWorkletNode {
-    constructor(context: AudioContext, audioWorkletNodeOptions: AudioWorkletNodeOptions = {
-        processorOptions: {
-            sampleRate: context.sampleRate
-        },
-        numberOfInputs: 2,
-        numberOfOutputs: 1,
-        outputChannelCount: [2]
-    }) {
-        super(context, id, audioWorkletNodeOptions)
-        this.onprocessorerror = (ev) => console.log(ev)
-    }
+  constructor(context: AudioContext, audioWorkletNodeOptions: AudioWorkletNodeOptions = {
+    processorOptions: {
+      sampleRate: context.sampleRate
+    },
+    numberOfInputs: 2,
+    numberOfOutputs: 1,
+    outputChannelCount: [2]
+  }) {
+    super(context, id, audioWorkletNodeOptions)
+    this.onprocessorerror = (ev) => console.log(ev)
+  }
 }

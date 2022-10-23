@@ -6,10 +6,10 @@
   background-color: transparent;
   border: 0;
   padding: 0;
+  -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
-  -webkit-tap-highlight-color: transparent;
+  /* -webkit-tap-highlight-color: transparent; */
 }
 
 .wrg-toggle-input {
@@ -61,12 +61,20 @@
   height: 24px;
   padding: 0;
   border-radius: 30px;
-  background-color: #2C2C2E;
+  background-color: rgba(44, 44, 46, 1);
   transition: all 0.2s ease;
   width: 72px;
   height: 44px;
   box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
+  transition: 400ms;
 }
+
+.wrg-toggle--checked > .wrg-toggle-container {
+  background-color: rgba(255, 255, 255, 1);
+  transition: 400ms;
+
+}
+
 
 .wrg-toggle-circle {
   position: absolute;
@@ -96,11 +104,14 @@
 
 .wrg-toggle--checked .wrg-toggle-check {
   opacity: 1;
+
 }
 
 .wrg-toggle--checked .wrg-toggle-uncheck {
   opacity: 0;
 }
+
+
 
 .wrg-toggle--checked .wrg-toggle-circle {
   left: 30px;
@@ -125,7 +136,8 @@ svg {
 svg.track-shadow {
   position: absolute;
   top: 0px;
-  rotate: 45deg;
+  /* transform: rotate(45deg); */
+  /* rotate: 45deg; */
 }
 
 svg.track-shadow > circle {
@@ -147,7 +159,6 @@ circle.blur {
 }
 
 circle.track-shadow {
-  stroke: red;
   stroke-width: 1px;
   filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
 }
@@ -160,7 +171,7 @@ div.outline {
 svg.outline {
   position: absolute;
   top: 0px;
-  rotate: 45deg;
+  /* rotate: 45deg; */
   transform: scale(0.92);
 }
 
