@@ -9,6 +9,7 @@
   margin: auto;
   /* margin-top: 10px; */
   top: 5px;
+  touch-action: none;
 }
 .knob.base {
   position: absolute;

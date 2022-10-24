@@ -65,21 +65,25 @@ export class Knob extends Component<KnobProps, State> {
     }
 
     startDrag = (e: MouseEvent | TouchEvent) => {
+        e.preventDefault()
+
         const isTouchEvent = (thing: MouseEvent | TouchEvent): thing is TouchEvent => {
-            return Object.prototype.hasOwnProperty.call(thing, "touches")
+            return "touches" in thing
         }
+
         let startY = isTouchEvent(e)
             ? this.currentDeg + e.targetTouches[0].clientY
             : this.currentDeg + e.clientY
 
-        e.preventDefault()
+
         const clampDeg = (input: number) => {
             return clamp(input, this.startAngle, this.endAngle)
         }
 
         const moveHandler = (e: MouseEvent | TouchEvent) => {
-            const sensitivity = 1
+            e.preventDefault()
 
+            const sensitivity = 1
             const clienty = isTouchEvent(e)
                 ? e.targetTouches[0].clientY
                 : e.clientY
@@ -116,7 +120,7 @@ export class Knob extends Component<KnobProps, State> {
         })
 
         document.addEventListener("touchmove", moveHandler)
-        document.addEventListener("touchup", () => {
+        document.addEventListener("touchend", () => {
             document.removeEventListener("touchmove", moveHandler)
         })
     }
