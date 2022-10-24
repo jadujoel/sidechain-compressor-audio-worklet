@@ -4,6 +4,7 @@ import { mAudioWorklet } from "./worklet"
 
 export function installer(force = false) {
   console.log("installing polyfill")
+
   const hasScriptProcessor
         = "createScriptProcessor" in AudioContext.prototype
 

@@ -2,10 +2,6 @@ type SidechainCompressorParameterKeys = typeof SidechainCompressorProcessor.para
 type ParameterRecord = Record<SidechainCompressorParameterKeys, Float32Array>
 
 /**
- * An example of AudioWorkletProcessor that uses RingBuffer inside. If your
- * audio processing function uses the buffer size other than 128 frames, using
- * RingBuffer can be a solution.
- *
  * @class SidechainCompressorProcessor
  * @extends AudioWorkletProcessor
  */
