@@ -69,10 +69,11 @@
   transition: 400ms;
 }
 
+
+
 .wrg-toggle--checked > .wrg-toggle-container {
   background-color: rgba(255, 255, 255, 1);
   transition: 400ms;
-
 }
 
 
@@ -88,8 +89,6 @@
   box-sizing: border-box;
   transition: all 0.25s ease;
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.5);
-
-  /* background: linear-gradient(white, black); */
 }
 
 .wrg-toggle-circle.background {
@@ -104,7 +103,6 @@
 
 .wrg-toggle--checked .wrg-toggle-check {
   opacity: 1;
-
 }
 
 .wrg-toggle--checked .wrg-toggle-uncheck {
@@ -163,7 +161,6 @@ circle.track-shadow {
   filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
 }
 
-
 div.outline {
   position: absolute;
 }
@@ -177,9 +174,7 @@ svg.outline {
 
 circle.outline {
   stroke-width: 1px;
-  /* stroke: rgba(255, 255, 255, 0.2); */
   stroke: url(#gradient);
   stroke-dasharray: 360;
   stroke-dashoffset: 170;
-  /* filter: blur(0.2px); */
 }

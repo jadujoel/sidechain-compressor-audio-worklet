@@ -8,7 +8,7 @@ function getAudioUrl(id: string) {
     return new URL(audio + id + ".mp4", window.location.href)
 }
 
-export async function createApp() {
+export async function createCompressor() {
     await createAudioContext()
     audioWorkletPolyfill()
     const audioContext = await createAudioContext()

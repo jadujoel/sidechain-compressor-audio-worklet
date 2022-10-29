@@ -47,15 +47,14 @@ const ToggleButton = (props: {
 
     }, className)
 
-    // const cx = !toggle ? "16" : "37"
-    // const cy = !toggle ? "34" : "12"
     const cx = "11"
     const cy = "34"
 
     return (
         <div onClick={triggerToggle} className={toggleClasses}>
             <div className="wrg-toggle-container">
-                <div className="wrg-toggle-circle">                <svg className={`wrg-toggle knob outline`} x="0px" y="0px" width="68px" height="68px">
+                <div className="wrg-toggle-circle">
+                    <svg className={`wrg-toggle knob outline`} x="0px" y="0px" width="68px" height="68px">
                     <defs>
                         <linearGradient id="gradient" y1="0" y2="1">
                             <stop stopColor="rgba(255,255,255,0.25)" offset="0"/>
@@ -63,16 +62,8 @@ const ToggleButton = (props: {
                         </linearGradient>
                     </defs>
                     <circle className={`outline`} cx={cx} cy={cy} r="21.5"/>
-                </svg></div>
-                {/* <svg className={`wrg-toggle knob outline`} x="0px" y="0px" width="68px" height="68px">
-                    <defs>
-                        <linearGradient id="gradient" y1="0" y2="1">
-                            <stop stopColor="rgba(255,255,255,0.25)" offset="0"/>
-                            <stop stopColor="rgba(0,0,0,1)" offset="1"/>
-                        </linearGradient>
-                    </defs>
-                    <circle className={`outline`} cx={cx} cy={cy} r="21.5"/>
-                </svg> */}
+                    </svg>
+                </div>
                 <input type="checkbox" aria-label="Toggle Button" className="wrg-toggle-input" />
             </div>
         </div>

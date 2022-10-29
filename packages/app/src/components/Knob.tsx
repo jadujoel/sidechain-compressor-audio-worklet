@@ -23,7 +23,8 @@ interface State {
     deg: number
 }
 
-const Rotation = [134, -90, 46] as const
+// const Rotation = [134, -90, 46] as const
+const Rotation = [134, -90, 135] as const
 
 const parse = (o: Record<string, any>) => {
     return JSON.parse(JSON.stringify(o))
@@ -52,6 +53,7 @@ export class Knob extends Component<KnobProps, State> {
     startAngle: number
     endAngle: number
     currentDeg: number
+    #hasTouchListener = false
 
     constructor(props: KnobProps) {
         super(props)
@@ -71,7 +73,9 @@ export class Knob extends Component<KnobProps, State> {
             return "touches" in thing
         }
 
-        let startY = isTouchEvent(e)
+        const isTouch = isTouchEvent(e)
+
+        let startY = isTouch
             ? this.currentDeg + e.targetTouches[0].clientY
             : this.currentDeg + e.clientY
 
@@ -82,9 +86,10 @@ export class Knob extends Component<KnobProps, State> {
 
         const moveHandler = (e: MouseEvent | TouchEvent) => {
             e.preventDefault()
+            const isTouch = isTouchEvent(e)
 
             const sensitivity = 1
-            const clienty = isTouchEvent(e)
+            const clienty = isTouch
                 ? e.targetTouches[0].clientY
                 : e.clientY
 
@@ -114,15 +119,24 @@ export class Knob extends Component<KnobProps, State> {
             this.setState({ deg: this.currentDeg })
             this.props.onChange(newValue)
         }
+
+        if (isTouch) {
+            if (!this.#hasTouchListener) {
+                this.#hasTouchListener = true
+                document.addEventListener("touchmove", moveHandler)
+                document.addEventListener("touchend", () => {
+                    document.removeEventListener("touchmove", moveHandler)
+                    this.#hasTouchListener = false
+                })
+            }
+            return
+        }
+
         document.addEventListener("mousemove", moveHandler)
         document.addEventListener("mouseup", () => {
             document.removeEventListener("mousemove", moveHandler)
         })
 
-        document.addEventListener("touchmove", moveHandler)
-        document.addEventListener("touchend", () => {
-            document.removeEventListener("touchmove", moveHandler)
-        })
     }
 
     getOffset() {
@@ -134,7 +148,7 @@ export class Knob extends Component<KnobProps, State> {
                 return 360 - scaled + angle
             }
             case Knob.FillStart.Right: {
-                return 0 - scaled - angle
+                return 0 - scaled + 23
             }
             case Knob.FillStart.Middle: {
                 return this.currentDeg > 180
@@ -149,20 +163,21 @@ export class Knob extends Component<KnobProps, State> {
 
     override render() {
         const rotate = {
-            transform: `rotate(${this.state.deg}deg)`
+            transform: `rotate(${this.state.deg}deg)`,
+            // rotate: `${Rotation[this.state.deg]}deg)`,
         } as const
         const circle = {
             "strokeDashoffset": this.getOffset()
         } as const
         const svgStyle = {
-            transform: `rotate(${Rotation[this.props.fillStart]}deg)`
+            transform: `rotate(${Rotation[this.props.fillStart]}deg)`,
+            // rotate: `${Rotation[this.props.fillStart]}deg)`,
         } as const
 
         return (
             <div className="knob container" onMouseDown={this.startDrag as any} onTouchStart={this.startDrag as any}>
-                {/* <div className="knob track"></div> */}
                 <svg className="track-shadow" x="0px" y="0px" width="68px" height="68px">
-                    <filter id="inset-shadow" x="-50%" y="-50%" width="200%" height="200%" transform="rotate(90deg)">
+                    <filter id="inset-shadow" x="-50%" y="-50%" width="200%" height="200%">
                         <feComponentTransfer in="SourceAlpha">
                             <feFuncA type="table" tableValues="1 0" />
                         </feComponentTransfer>
@@ -178,16 +193,17 @@ export class Knob extends Component<KnobProps, State> {
                     </filter>
                     <circle cx="34" cy="34" r="30" filter="url(#inset-shadow)"/>
                 </svg>
-                <div className="pizza"/>
-                <div className="">
+                <div className="knob-track-white-fill">
                     <svg x="0px" y="0px" width="68px" height="68px" style={parse(svgStyle)}>
                         <circle cx="34" cy="34" r="30" style={parse(circle)}/>
-                        <circle className="glow" cx="34" cy="34" r="30" style={parse(circle)}/>
                     </svg>
                 </div>
+                <div className="pizza"/>
                 <div className="knob">
 
                     <div className="knob base shadow"></div>
+                    <div className="knob base border"/>
+                    <div className="knob base filler"/>
                     <div className="knob base rotate" style={rotate}>
                         <div className="knob indicator"></div>
                         <div className="knob indicator fill"></div>
@@ -203,6 +219,7 @@ export class Knob extends Component<KnobProps, State> {
                     </defs>
                     <circle className="outline" cx="34" cy="34" r="29"/>
                 </svg>
+
             </div>
         )
     }
