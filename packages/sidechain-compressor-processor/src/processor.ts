@@ -106,12 +106,15 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
     try {
       if (this.firstTime) {
         console.log("[processor]", "inputs", inputs.length, "outputs", outputs.length, "input", inputs[0].length, "output", outputs[0].length)
-        this.firstTime = false
       }
       if (this.isBypassed) {
         for (const [ib, inBus] of inputs.entries()) {
+          const outbus = outputs[ib]
           for (const [ic, inChannel] of inBus.entries()) {
-            outputs[ib][ic].set(inChannel)
+            const outChannel = outbus[ic]
+            for (let sample = 0; sample < inChannel.length; ++sample) {
+              outChannel[sample] = inChannel[sample]
+            }
           }
         }
         return true
@@ -143,6 +146,10 @@ class SidechainCompressorProcessor extends AudioWorkletProcessor {
     }
     catch (e) {
       this.useLogging && console.debug(e)
+    }
+    if (this.firstTime) {
+      console.log("[processor]", "inputs", inputs, "outputs", outputs)
+      this.firstTime = false
     }
     return true
   }

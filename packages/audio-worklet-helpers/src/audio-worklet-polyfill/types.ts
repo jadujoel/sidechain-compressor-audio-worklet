@@ -15,9 +15,17 @@ export type mAudioWorkletNode = {
     context: Scope
     isAudioWorkletNodePolyfill: boolean
     channelMerger: ChannelMergerNode
-    inputProcessors: [ScriptProcessorNode, ScriptProcessorNode]
-    inputBuffers: [AudioBuffer, AudioBuffer]
-} & AudioWorkletProcessor
+    inputNodes: ScriptProcessorNode[]
+    inputBuffers: AudioBuffer[]
+    _outputNodes: ScriptProcessorNode[]
+    // outputBuffers: AudioBuffer[]
+    _channelCount: number
+    _numberOfInputs: number
+    _numberOfOutputs: number
+    _outputChannelCount: number[]
+    _outputs: Float32Array[][]
+    $connect: typeof ScriptProcessorNode.prototype.connect
+} & AudioWorkletProcessor & AudioNode
 
 export interface IAudioWorkletNode extends AudioWorkletNode {
     prototype: AudioWorkletNode;

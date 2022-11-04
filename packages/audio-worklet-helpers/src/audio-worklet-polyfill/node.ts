@@ -10,66 +10,70 @@ export class AudioWorkletProcessorPolyfill  {
     this.port = nextPort
   }
 }
-
-const scriptPrototype = ScriptProcessorNode.prototype as typeof ScriptProcessorNode.prototype & { $connect: typeof ScriptProcessorNode.prototype.connect }
-scriptPrototype.$connect = scriptPrototype.connect
-function connect(this: typeof scriptPrototype, destination: AudioNode,  output?: number | undefined, input?: number | undefined) {
-  console.log("[ScriptProcessorNode]: connect", {this: this, output, input})
-  return this.$connect(destination, output, input)
-}
-scriptPrototype.connect = connect as typeof scriptPrototype.connect
-
-
 function isAudioWorkletNodePolyfill(thing: Record<string, any>): thing is mAudioWorkletNode {
   return "isAudioWorkletNodePolyfill" in thing && thing.isAudioWorkletNodePolyfill === true
 }
 
-function isAudioWorkletNodePolyfillInputProcessor(thing: Record<string, any>) {
-  return "AWNPI" in thing && thing.AWNPI === true
-}
-
-const audioPrototype = AudioNode.prototype as typeof AudioNode.prototype & { $connect: typeof AudioNode.prototype.connect }
-audioPrototype.$connect = audioPrototype.connect
-function connectAudioNode(this: typeof audioPrototype, destination: AudioNode,  output?: number | undefined, input?: number | undefined) {
-  console.log("[AudioNode]: connect", {this: this, destination, output, input})
-  if (isAudioWorkletNodePolyfill(destination) && !isAudioWorkletNodePolyfillInputProcessor(destination)) {
-    console.debug("[AudioNode]: connecting to polyfilled audioworklet-script-processor!")
-    this.$connect(destination.inputProcessors[input ?? 0], output, 0)
-    return destination
+function overrideConnectScriptProcessor() {
+  const prototype = ScriptProcessorNode.prototype as typeof ScriptProcessorNode.prototype & { $connect: typeof ScriptProcessorNode.prototype.connect }
+  prototype.$connect = prototype.connect
+  function connect(this: typeof prototype, destination: AudioNode,  output?: number | undefined, input?: number | undefined) {
+    console.log("[ScriptProcessorNode]: connect", {this: this, output, input})
+    if (isAudioWorkletNodePolyfill(this)) {
+      return this._outputNodes[output || 0].connect(destination, 0, input)
+    }
+    return this.$connect(destination, output, input)
   }
-  return this.$connect(destination, output, input)
+  prototype.connect = connect as typeof prototype.connect
 }
-audioPrototype.connect = connectAudioNode as typeof audioPrototype.connect
 
+/** ScriptProcessorNode can only have one input, which is why we-ve added multiple as inputs to this polyfill
+ * so now all nodes needs to know how to connect to the correct inpt
+ */
+function overrideConnectAudioNode() {
+  const prototype = AudioNode.prototype as typeof AudioNode.prototype & { $connect: typeof AudioNode.prototype.connect }
+  prototype.$connect = prototype.connect
 
+  prototype.connect = function connectAudioNode(this: typeof prototype, destination: AudioNode,  output?: number | undefined, input?: number | undefined) {
+    if (isAudioWorkletNodePolyfill(destination)) {
+      this.$connect(destination.inputNodes[input ?? 0], output, 0)
+      return destination
+    }
+    return this.$connect(destination, output, input)
+  } as typeof prototype.connect
+}
 
+overrideConnectScriptProcessor()
+overrideConnectAudioNode()
+
+const vname = "[AudioWorkletNodePolyfill]:"
 export class AudioWorkletNodePolyfill {
   constructor(context: BaseAudioContext, name: string, options?: AudioWorkletNodeOptions) {
     const processor = getProcessorsForContext(context)[name]
-    const outputChannels = (options && options.outputChannelCount) ? options.outputChannelCount[0] : 2
+    const numberOfInputs = options?.numberOfInputs ?? 1
+    const numberOfOutputs = options?.numberOfOutputs ?? options?.outputChannelCount?.length ?? 1
+    const channelCount = options?.channelCount ?? 2
+    const outputChannels = options?.outputChannelCount ? options.outputChannelCount[0] : channelCount
+    const outputChannelCount = options?.outputChannelCount ?? new Array<number>(numberOfOutputs).fill(outputChannels)
+    const bufferSize = 1024 as const
+    console.debug(vname, {options, channelCount, outputChannels, numberOfInputs, numberOfOutputs, outputChannelCount, bufferSize})
 
-    const me = context.createScriptProcessor(1024, 2, outputChannels) as unknown as mAudioWorkletNode
-    // const channelMerger = context.createChannelMerger(2)
-    // me.channelMerger = channelMerger
-    // me.channelMerger.connect(me as any)
-    me.inputBuffers = [
-      context.createBuffer(2, 1024, context.sampleRate),
-      context.createBuffer(2, 1024, context.sampleRate),
-    ]
+    const me = context.createScriptProcessor(bufferSize, channelCount, outputChannels) as unknown as mAudioWorkletNode
+    me._numberOfInputs = numberOfInputs
+    me._numberOfOutputs = numberOfOutputs
+    me._outputChannelCount = outputChannelCount
+    me._channelCount = channelCount
 
     me.isAudioWorkletNodePolyfill = true
     me.parameters = new Map<string, AudioParam>()
     if (processor.properties) {
       for (const prop of processor.properties) {
         const audioParam = context.createGain().gain
-        if (prop.defaultValue !== undefined) {
-          audioParam.value = prop.defaultValue
-        }
+        audioParam.value = prop.defaultValue ?? audioParam.value
         // @TODO there's no good way to construct the proxy AudioParam here
         me.parameters.set(prop.name, audioParam)
       }
     }
-
 
     const messageChannel = new MessageChannel()
     nextPort = messageChannel.port2
@@ -82,20 +86,47 @@ export class AudioWorkletNodePolyfill {
     me.instance = instance
     me.onaudioprocess = onaudioprocess
 
-    me.inputProcessors = [
-      context.createScriptProcessor(1024, 2, 1),
-      context.createScriptProcessor(1024, 2, 1)
-    ]
-
-    for (let i = 0; i < 2; ++i) {
-      const proc = me.inputProcessors[i];
-      (proc as any).AWNPI = true;
-      proc.onaudioprocess = (ev: AudioProcessingEvent) => {
-        me.inputBuffers[i] = ev.inputBuffer
+    const createInputs = () => {
+      const nodes: ScriptProcessorNode[] = new Array(numberOfInputs)
+      const buffers: AudioBuffer[] = new Array(numberOfInputs)
+      for (let i = 0; i < numberOfInputs; ++i) {
+        buffers[i] = context.createBuffer(channelCount, bufferSize, context.sampleRate)
+        const node = context.createScriptProcessor(bufferSize, channelCount, channelCount);
+        node.onaudioprocess = ev => me.inputBuffers[i] = ev.inputBuffer;
+        (node as any).$connect(me)
+        nodes[i] = node
       }
-      proc.connect(me as unknown as ScriptProcessorNode)
+      me.inputNodes = nodes
+      me.inputBuffers = buffers
     }
+    createInputs()
 
+    const createOutputs = () => {
+      const outputs = new Array<Float32Array[]>(numberOfOutputs)
+      for (const [i, numChannels] of outputChannelCount.entries()) {
+        outputs[i] =
+          new Array<Float32Array>(numChannels)
+          .fill(new Float32Array(bufferSize).fill(0))
+      }
+      me._outputs = outputs
+
+      const nodes: ScriptProcessorNode[] = new Array(numberOfOutputs)
+      for (let i = 0; i < numberOfOutputs; ++i) {
+        const node = context.createScriptProcessor(bufferSize, 1, outputChannelCount[i]);
+        node.onaudioprocess = ev => {
+          for (let ch = 0; ch < outputChannelCount[i]; ++ch) {
+            const channelData = ev.outputBuffer.getChannelData(ch)
+            for (let sample = 0; sample < channelData.length; ++ sample) {
+              channelData[sample] = me._outputs[i][ch][sample]
+            }
+          }
+        }
+        me.$connect(node, 0, 0)
+        nodes[i] = node
+      }
+      me._outputNodes = nodes
+    }
+    createOutputs()
     return me
 
     function onaudioprocess (this: mAudioWorkletNode, params: { inputBuffer: AudioBuffer, outputBuffer: AudioBuffer}) {
@@ -114,23 +145,19 @@ export class AudioWorkletNodePolyfill {
         'self.sampleRate=sampleRate=' + this.context.sampleRate + ';'
         + 'self.currentTime=currentTime=' + this.context.currentTime
       )
-      // const inputs = channelToArray(params.inputBuffer)
-      const input0 = channelToArray(this.inputBuffers[0])
-      const input1 = channelToArray(this.inputBuffers[1])
-      // const input1 = inputs.slice(2, 4)
-      const outputs = channelToArray(params.outputBuffer)
-      this.instance?.process([input0, input1], [outputs], parameters)
+      const inputs: Float32Array[][] = new Array(this._numberOfInputs)
+      for (let i = 0; i < this._numberOfInputs; ++i) {
+        inputs[i] = bufferToArray(this.inputBuffers[i])
+      }
 
-      // @todo - keepalive
-      // let ret = this.instance.process([inputs], [outputs], parameters);
-      // if (ret === true) { }
+      this.instance?.process(inputs, this._outputs as any, parameters)
 
-      function channelToArray (ch: AudioBuffer) {
-        const out = []
-        for (let i = 0; i < ch.numberOfChannels; i++) {
-          out[i] = ch.getChannelData(i)
+      function bufferToArray (buffer: AudioBuffer) {
+        const output = new Array<Float32Array>(buffer.numberOfChannels)
+        for (let i = 0; i < buffer.numberOfChannels; i++) {
+          output[i] = buffer.getChannelData(i)
         }
-        return out
+        return output
       }
     }
   }

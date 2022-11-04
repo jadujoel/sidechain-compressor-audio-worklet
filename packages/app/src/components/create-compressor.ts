@@ -40,12 +40,9 @@ export async function createCompressor() {
     musicGain.gain.value = 0.5
     masterGain.gain.value = 0.8
 
-    console.log("connect musicSource")
     musicSource
         .connect(musicGain)
         .connect(compressorNode, 0, 0)
-
-    // console.log({ScriptProcessorNode})
 
     sidechainSource
         .connect(sidechainGain)
@@ -54,15 +51,6 @@ export async function createCompressor() {
     compressorNode
         .connect(masterGain)
         .connect(audioContext.destination)
-
-
-    // const mergerNode = audioContext.createChannelMerger()
-
-
-    // musicSource.connect(mergerNode, 0, 0)
-    // sidechainSource.connect(mergerNode, 0, 1)
-    // mergerNode.connect(audioContext.destination, 0, 0)
-
 
     musicSource.start(audioContext.currentTime + 0.2, offset, duration)
     sidechainSource.start(audioContext.currentTime + 0.2, offset, duration)
