@@ -13,6 +13,10 @@ export type mAudioWorkletNode = {
     instance?: AudioWorkletProcessor
     bufferSize: number
     context: Scope
+    isAudioWorkletNodePolyfill: boolean
+    channelMerger: ChannelMergerNode
+    inputProcessors: [ScriptProcessorNode, ScriptProcessorNode]
+    inputBuffers: [AudioBuffer, AudioBuffer]
 } & AudioWorkletProcessor
 
 export interface IAudioWorkletNode extends AudioWorkletNode {

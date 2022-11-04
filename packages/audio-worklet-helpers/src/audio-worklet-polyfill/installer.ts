@@ -1,4 +1,4 @@
-import { mAudioWorkletNode } from "./node"
+import { AudioWorkletNodePolyfill } from "./node"
 import type { IAudioWorklet, IAudioWorkletNode } from "./types"
 import { mAudioWorklet } from "./worklet"
 
@@ -18,7 +18,7 @@ export function installer(force = false) {
 
   console.log({hasScriptProcessor, hasAudioWorklet})
   if (shouldInstall) {
-    self.AudioWorkletNode = mAudioWorkletNode as unknown as IAudioWorkletNode //mAudioWorkletNode
+    self.AudioWorkletNode = AudioWorkletNodePolyfill as unknown as IAudioWorkletNode //mAudioWorkletNode
     self.AudioWorklet = mAudioWorklet
 
     // add audioworklet property to audiocontext prototype

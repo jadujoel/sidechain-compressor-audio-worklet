@@ -1,5 +1,5 @@
 import { getProcessorsForContext } from './get-processors-for-context'
-import { mAudioWorkletProcessor } from './node'
+import { AudioWorkletProcessorPolyfill } from './node'
 import { Realm, Scope } from './realm'
 import { IProcessor } from './types'
 
@@ -19,7 +19,7 @@ export class mAudioWorklet implements mAudioWorklet {
     const audioContextScope: Scope = {
       sampleRate: this.#context.sampleRate,
       currentTime: this.#context.currentTime,
-      AudioWorkletProcessor: mAudioWorkletProcessor as any,
+      AudioWorkletProcessor: AudioWorkletProcessorPolyfill as any,
       registerProcessor: (name: string, Processor: AudioWorkletProcessor) => {
         const processors = getProcessorsForContext(this.#context)
         const processor: IProcessor = {

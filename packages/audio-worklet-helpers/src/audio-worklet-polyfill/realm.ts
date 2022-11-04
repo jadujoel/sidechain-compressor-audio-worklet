@@ -42,8 +42,7 @@ export class Realm {
     // need this to run eval
     const script = doc.createElement('script')
     script.appendChild(doc.createTextNode(
-      `function $hook(self,console) {"use strict";
-            ${vars};return function() {return eval(arguments[0])}}`
+      `function $hook(self,console) {"use strict";${vars};return function() {return eval(arguments[0])}}`
     ))
     doc.body.appendChild(script)
 
