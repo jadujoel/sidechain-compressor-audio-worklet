@@ -97,12 +97,12 @@
   width: 60px;
 }
 
-svg {
+.svg {
   overflow: visible;
   position: absolute;
 }
 
-svg.track-shadow {
+.svg.track-shadow {
   position: absolute;
   top: 0px;
   /* rotate: 45deg; */
@@ -110,13 +110,13 @@ svg.track-shadow {
   /* rotate: 45deg; */
 }
 
-svg.track-shadow > circle {
+.svg.track-shadow > .circle {
   stroke: #2C2C2E;
   stroke-width: 8px;
   stroke-dasharray: 360;
 }
 
-circle {
+.circle {
   position: absolute;
   fill: none;
   stroke: white;
@@ -124,20 +124,20 @@ circle {
   stroke-dasharray: 360;
 }
 
-circle.blur {
+.circle.blur {
   filter: blur(4px);
 }
 
-circle.track-shadow {
+.circle.track-shadow {
   stroke-width: 1px;
   /* filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4)); */
 }
 
-div.outline {
+.outline {
   position: absolute;
 }
 
-svg.outline {
+.svg.outline {
   position: absolute;
   top: 0px;
   rotate: 45deg;
@@ -145,7 +145,7 @@ svg.outline {
   /* transform: scale(0.92); */
 }
 
-circle.outline {
+.circle.outline {
   stroke-width: 2px;
   /* stroke: rgba(255, 255, 255, 0.2); */
   stroke: url(#gradient);

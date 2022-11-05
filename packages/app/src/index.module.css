@@ -1,0 +1,15 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: rgb(43 43 43);
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  height: 100vh;
+  width: 100%;
+}

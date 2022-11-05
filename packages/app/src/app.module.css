@@ -1,0 +1,8 @@
+.App {
+  display: grid;
+  margin: auto;
+  justify-content: center;
+  justify-self: center;
+  grid-template-columns: 1fr;
+  justify-items: center;
+}

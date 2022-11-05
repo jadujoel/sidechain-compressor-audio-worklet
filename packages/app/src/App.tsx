@@ -1,13 +1,11 @@
 
-import { Compressor } from "./components/Compressor"
-import './App.css'
-function App() {
+import styles from './app.module.css'
+import { Compressor } from "./components/compressor"
+export function App() {
     return (
-        <div className="App">
-            <header className="App-header"></header>
+        <div className={styles.App}>
+            <header className={styles["App-header"]}></header>
             <Compressor/>
         </div>
     )
 }
-
-export default App

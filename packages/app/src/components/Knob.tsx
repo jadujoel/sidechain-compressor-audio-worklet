@@ -1,14 +1,8 @@
 import { Component } from "react"
 import { clamp } from "../clamp"
+import { join } from "../utils/string"
 import { FunctionAny } from "../utils/types"
-import "./Knob.css"
-
-// type MouseEventFix = MouseEvent & {target: {getBoundingClientRect: FunctionAny}}
-// type TouchEventFix = TouchEvent & {target: {getBoundingClientRect: FunctionAny}}
-// type MoveEvent
-//     = React.MouseEvent<HTMLDivElement> & MouseEventFix
-//     | React.TouchEvent<HTMLDivElement>  & TouchEventFix
-
+import styles from "./knob.module.css"
 interface KnobProps {
     degrees: number
     size: number
@@ -164,20 +158,29 @@ export class Knob extends Component<KnobProps, State> {
     override render() {
         const rotate = {
             transform: `rotate(${this.state.deg}deg)`,
-            // rotate: `${Rotation[this.state.deg]}deg)`,
         } as const
         const circle = {
             "strokeDashoffset": this.getOffset()
         } as const
         const svgStyle = {
             transform: `rotate(${Rotation[this.props.fillStart]}deg)`,
-            // rotate: `${Rotation[this.props.fillStart]}deg)`,
         } as const
 
         return (
-            <div className="knob container" onMouseDown={this.startDrag as any} onTouchStart={this.startDrag as any}>
-                <svg className="track-shadow" x="0px" y="0px" width="68px" height="68px">
-                    <filter id="inset-shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <div className={join(styles.knob, styles.container)}
+                onMouseDown={this.startDrag as any}
+                onTouchStart={this.startDrag as any}>
+                <svg className={join(styles.svg, styles["track-shadow"])}
+                x="0px"
+                y="0px"
+                width="68px"
+                height="68px">
+                    <filter
+                    id="inset-shadow"
+                    x="-50%"
+                    y="-50%"
+                    width="200%"
+                    height="200%">
                         <feComponentTransfer in="SourceAlpha">
                             <feFuncA type="table" tableValues="1 0" />
                         </feComponentTransfer>
@@ -191,35 +194,38 @@ export class Knob extends Component<KnobProps, State> {
                             <feMergeNode />
                         </feMerge>
                     </filter>
-                    <circle cx="34" cy="34" r="30" filter="url(#inset-shadow)"/>
+                    <circle className={styles.circle}
+                    cx="34"
+                    cy="34"
+                    r="30"
+                    filter="url(#inset-shadow)"/>
                 </svg>
-                <div className="knob-track-white-fill">
-                    <svg x="0px" y="0px" width="68px" height="68px" style={parse(svgStyle)}>
-                        <circle cx="34" cy="34" r="30" style={parse(circle)}/>
+                <div className={styles["knob-track-white-fill"]}>
+                    <svg className={styles.svg}
+                    style={parse(svgStyle)}
+                    x="0px"
+                    y="0px"
+                    width="68px"
+                    height="68px">
+                        <circle className={styles.circle}
+                        style={parse(circle)}
+                        cx="34"
+                        cy="34"
+                        r="30"/>
                     </svg>
                 </div>
-                <div className="pizza"/>
-                <div className="knob">
-
-                    <div className="knob base shadow"></div>
-                    <div className="knob base border"/>
-                    <div className="knob base filler"/>
-                    <div className="knob base rotate" style={rotate}>
-                        <div className="knob indicator"></div>
-                        <div className="knob indicator fill"></div>
-                        <div className="knob indicator fill glow"></div>
+                <div className={styles.pizza}/>
+                <div className={styles.knob}>
+                    <div className={join(styles.knob, styles.base, styles.shadow)}/>
+                    <div className={join(styles.knob, styles.base, styles.border)}/>
+                    <div className={join(styles.knob, styles.base, styles.filler)}/>
+                    <div className={join(styles.knob, styles.base, styles.rotate)}
+                    style={rotate}>
+                        <div className={join(styles.knob, styles.indicator)}/>
+                        <div className={join(styles.knob, styles.indicator, styles.fill)}/>
+                        <div className={join(styles.knob, styles.indicator, styles.fill, styles.glow)}/>
                     </div>
                 </div>
-                <svg className="knob outline" x="0px" y="0px" width="68px" height="68px">
-                    <defs>
-                        <linearGradient id="gradient" y1="0" y2="1">
-                            <stop stopColor="rgba(255,255,255,0.25)" offset="0"/>
-                            <stop stopColor="rgba(0,0,0,0.25)" offset="1"/>
-                        </linearGradient>
-                    </defs>
-                    <circle className="outline" cx="34" cy="34" r="29"/>
-                </svg>
-
             </div>
         )
     }
