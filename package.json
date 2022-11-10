@@ -55,7 +55,7 @@
     "classnames": "2.3.2",
     "commitizen": "4.2.5",
     "conventional-changelog-conventionalcommits": "5.0.0",
-    "cypress": "10.9.0",
+    "cypress": "11.0.1",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.24.0",
     "glob": "8.0.1",

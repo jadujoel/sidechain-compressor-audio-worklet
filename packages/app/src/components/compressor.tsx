@@ -90,7 +90,8 @@ export function Compressor() {
 
     return <div className={styles.Compressor}>
         <header className={styles['Compressor-header']}>
-            Compressor</header>
+            Compressor
+        </header>
         <div className={styles['Compressor-main-area']}>
             <div className={styles["Compressor-controls"]}>
                 <div className={join(styles.frame, styles.blue)}>
