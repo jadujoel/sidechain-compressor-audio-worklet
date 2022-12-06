@@ -1,6 +1,6 @@
 {
    "name": "audio-worklet-helpers",
-   "version": "0.1.3",
+   "version": "0.1.4",
    "description": "Helpers for audio worklet using typescript with types and polyfills",
    "main": "dist/index.js",
    "types": "dist/@types/index.d.ts",
@@ -16,7 +16,7 @@
    "author": "Joel Lof <jlof@evolution.com> (https://joellof.com/)",
    "license": "MIT",
    "devDependencies": {
-      "@cypress/webpack-preprocessor": "5.13.1",
+      "@cypress/webpack-preprocessor": "5.15.6",
       "copy-webpack-plugin": "11.0.0",
       "cypress": "*",
       "pass-through-processor": "file:../pass-through-processor",
